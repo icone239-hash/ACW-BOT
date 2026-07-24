@@ -21,7 +21,7 @@ for (const folder of commandFolders) {
   }
 }
 
-const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN || config.token);
+const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN || process.env['discord token'] || process.env.TOKEN || config.token);
 
 (async () => {
   try {

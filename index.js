@@ -920,7 +920,7 @@ client.on('guildMemberUpdate', async (oldMember, newMember) => {
   }
 });
 
-client.login(process.env.DISCORD_TOKEN || config.token);
+client.login(process.env.DISCORD_TOKEN || process.env['discord token'] || process.env.TOKEN || config.token);
 
 process.on('unhandledRejection', (reason, promise) => {
   console.error('[Unhandled Rejection] Reason:', reason);
