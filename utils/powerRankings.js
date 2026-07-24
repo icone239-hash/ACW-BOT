@@ -1,0 +1,275 @@
+// utils/powerRankings.js
+const fs = require('fs');
+const path = require('path');
+const { EmbedBuilder } = require('discord.js');
+const db = require('../database');
+
+const REF_PATH = path.join(__dirname, '../data/powerrankings_msg.json');
+const CREWLIST_PATH = path.join(__dirname, '../data/crewlist.json');
+
+function readRef() {
+  try {
+    return JSON.parse(fs.readFileSync(REF_PATH, 'utf8'));
+  } catch {
+    return { channelId: null, messageId: null };
+  }
+}
+
+function writeRef(data) {
+  fs.writeFileSync(REF_PATH, JSON.stringify(data, null, 2), 'utf8');
+}
+
+function readCrewList() {
+  try { return JSON.parse(fs.readFileSync(CREWLIST_PATH, 'utf8')); }
+  catch { return []; }
+}
+
+const DIVISIONS_CONFIG = [
+  {
+    name: 'North Division (American Conference)',
+    emoji: '❄️',
+    color: '#00D2FF',
+    badge: 'North'
+  },
+  {
+    name: 'South Division (American Conference)',
+    emoji: '🔥',
+    color: '#FF4B2B',
+    badge: 'South'
+  },
+  {
+    name: 'Central Division (American Conference)',
+    emoji: '⚡',
+    color: '#F7B731',
+    badge: 'Central'
+  },
+  {
+    name: 'Gulf Division (American Conference)',
+    emoji: '🌊',
+    color: '#05C46B',
+    badge: 'Gulf'
+  }
+];
+
+const DIVISIONS = DIVISIONS_CONFIG.map(d => d.name);
+
+/**
+ * User Formula:
+ * Score = (Win Percentage × 100) + (Games Played × 2)
+ * Win Percentage = Wins ÷ (Wins + Losses)
+ * Games Played = Wins + Losses
+ * Unplayed teams rank below all played teams.
+ */
+function getPowerRankScore(team) {
+  const wins = team.wins || 0;
+  const losses = team.losses || 0;
+  const gamesPlayed = wins + losses;
+  if (gamesPlayed === 0) return -1;
+
+  const winPercentage = wins / gamesPlayed;
+  return (winPercentage * 100) + (gamesPlayed * 2);
+}
+
+function sortTeams(a, b) {
+  const aPlayed = ((a.wins || 0) + (a.losses || 0)) > 0 ? 1 : 0;
+  const bPlayed = ((b.wins || 0) + (b.losses || 0)) > 0 ? 1 : 0;
+  if (bPlayed !== aPlayed) return bPlayed - aPlayed;
+
+  const aScore = getPowerRankScore(a);
+  const bScore = getPowerRankScore(b);
+  if (bScore !== aScore) return bScore - aScore;
+
+  // Tiebreaker 1: Total Wins
+  if ((b.wins || 0) !== (a.wins || 0)) return (b.wins || 0) - (a.wins || 0);
+
+  // Tiebreaker 2: Fewest Losses
+  if ((a.losses || 0) !== (b.losses || 0)) return (a.losses || 0) - (b.losses || 0);
+
+  // Tiebreaker 3: Point Differential
+  const aDiff = (a.pointsFor || 0) - (a.pointsAgainst || 0);
+  const bDiff = (b.pointsFor || 0) - (b.pointsAgainst || 0);
+  return bDiff - aDiff;
+}
+
+function randomizeTeamDivisions() {
+  const crewList = readCrewList();
+  if (crewList.length === 0) return;
+
+  const teams = db.getTeams();
+
+  // Shuffle crewList array randomly (Fisher-Yates)
+  const shuffled = [...crewList];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+
+  // Assign divisions evenly to database teams
+  shuffled.forEach((c, i) => {
+    const div = DIVISIONS[i % DIVISIONS.length];
+    const dbTeam = teams.find(t => t.name.toLowerCase() === c.team.toLowerCase() || (c.roleId && t.roleId === c.roleId));
+    if (dbTeam) {
+      db.updateTeamDivision(dbTeam.id, div);
+    }
+  });
+}
+
+async function updatePowerRankingsMessage(guild) {
+  // Find the power rankings channel
+  const channel = guild.channels.cache.find(
+    c => c.isTextBased() && (c.name.includes('power-rankings') || c.name.includes('powerrankings'))
+  );
+
+  if (!channel) {
+    console.warn('[PowerRankings] Power rankings channel not found.');
+    return;
+  }
+
+  await guild.roles.fetch().catch(() => {});
+  const crewList = readCrewList();
+  const teams = db.getTeams();
+
+  // Map every single crew in crewList to its DB record
+  const allCrews = crewList.map(c => {
+    const dbTeam = teams.find(t => t.name.toLowerCase() === c.team.toLowerCase() || (c.roleId && t.roleId === c.roleId));
+    return {
+      name: c.team,
+      roleId: c.roleId || (dbTeam ? dbTeam.roleId : ''),
+      wins: dbTeam ? (dbTeam.wins || 0) : 0,
+      losses: dbTeam ? (dbTeam.losses || 0) : 0,
+      ties: dbTeam ? (dbTeam.ties || 0) : 0,
+      pointsFor: dbTeam ? (dbTeam.pointsFor || 0) : 0,
+      pointsAgainst: dbTeam ? (dbTeam.pointsAgainst || 0) : 0,
+      division: dbTeam ? dbTeam.division : (c.division || null)
+    };
+  });
+
+  // If any crew is missing a division, assign a division to ONLY the unassigned team(s) without touching existing teams
+  const unassigned = allCrews.filter(c => !c.division || !DIVISIONS.includes(c.division));
+  if (unassigned.length > 0) {
+    const currentTeams = db.getTeams();
+    unassigned.forEach(c => {
+      const dbTeam = currentTeams.find(t => t.name.toLowerCase() === c.name.toLowerCase() || (c.roleId && t.roleId === c.roleId));
+      if (dbTeam) {
+        // Balance across divisions
+        const divCounts = {};
+        DIVISIONS.forEach(d => divCounts[d] = 0);
+        currentTeams.forEach(t => {
+          if (t.division && DIVISIONS.includes(t.division)) {
+            divCounts[t.division] = (divCounts[t.division] || 0) + 1;
+          }
+        });
+        const sortedDivs = DIVISIONS.slice().sort((a, b) => divCounts[a] - divCounts[b]);
+        const chosenDiv = sortedDivs[0] || DIVISIONS[Math.floor(Math.random() * DIVISIONS.length)];
+
+        db.updateTeamDivision(dbTeam.id, chosenDiv);
+        c.division = chosenDiv;
+        dbTeam.division = chosenDiv;
+      }
+    });
+  }
+
+  // Find overall Rank 1 team for the ping text (formula score)
+  const sortedOverall = [...allCrews].sort(sortTeams);
+
+  const rank1Team = sortedOverall[0];
+  const rank1Mention = (rank1Team && rank1Team.roleId && guild.roles.cache.has(rank1Team.roleId))
+    ? `<@&${rank1Team.roleId}>`
+    : `**${rank1Team?.name || 'Nobody'}**`;
+  const preseasonRole = guild.roles.cache.find(r => r.name.includes('Preseason Champs'));
+  const champsMention = preseasonRole ? `<@&${preseasonRole.id}>` : '**Preseason Champs**';
+
+  const contentText = `@everyone 🏆 **OFFICIAL ACW S1 DIVISION POWER RANKINGS**\n🎟️ *The Top 3 crews from each division make the Playoffs!*\n\n${rank1Mention} is currently holding overall #1 looking to claim the ${champsMention} title! Can anyone overcome them?`;
+
+  const divisionEmbeds = [];
+
+  for (const divConf of DIVISIONS_CONFIG) {
+    const divTeams = allCrews.filter(t => t.division === divConf.name);
+
+    // Sort by Formula Score: (Win % * 100) + (Games Played * 2)
+    divTeams.sort(sortTeams);
+
+    let descLines = [];
+    const TOTAL_SLOTS = Math.max(9, divTeams.length);
+
+    for (let i = 0; i < TOTAL_SLOTS; i++) {
+      const slotNum = i + 1;
+
+      // Add a visual playoff boundary line after rank 3
+      if (slotNum === 4) {
+        descLines.push('─────────────────────');
+      }
+
+      if (i < divTeams.length) {
+        const team = divTeams[i];
+        const roleExists = team.roleId && guild.roles.cache.has(team.roleId);
+        const teamMention = roleExists ? `<@&${team.roleId}>` : `**${team.name}**`;
+        const hasGames = (team.wins + team.losses + team.ties) > 0;
+        const scoreStr = hasGames ? `**${team.wins}W - ${team.losses}L**` : 'No games';
+        
+        let rankIcon = '🔹';
+        let playoffBadge = '';
+        if (slotNum === 1) {
+          rankIcon = '👑';
+          playoffBadge = ' 🎟️';
+        } else if (slotNum === 2) {
+          rankIcon = '🥇';
+          playoffBadge = ' 🎟️';
+        } else if (slotNum === 3) {
+          rankIcon = '🥈';
+          playoffBadge = ' 🎟️';
+        }
+
+        descLines.push(`${rankIcon} **${slotNum}.** ${teamMention} — ${scoreStr}${playoffBadge}`);
+      } else {
+        descLines.push(`▫️ **${slotNum}.** TBD`);
+      }
+    }
+
+    const divEmbed = new EmbedBuilder()
+      .setColor(divConf.color)
+      .setTitle(`${divConf.emoji} ${divConf.name}`)
+      .setDescription(descLines.join('\n'))
+      .setFooter({ text: `${guild.name} • Formula: (Win% × 100) + (GP × 2) • Top 3 Qualify 🎟️`, iconURL: guild.iconURL({ dynamic: true }) })
+      .setTimestamp();
+
+    divisionEmbeds.push(divEmbed);
+  }
+
+  const ref = readRef();
+  let message = null;
+
+  if (ref.channelId === channel.id && ref.messageId) {
+    message = await channel.messages.fetch(ref.messageId).catch(() => null);
+  }
+
+  try {
+    let edited = false;
+    if (message) {
+      try {
+        await message.edit({
+          content: contentText,
+          embeds: divisionEmbeds
+        });
+        console.log('[PowerRankings] Updated existing Power Rankings message using exact formula.');
+        edited = true;
+      } catch (editErr) {
+        console.warn('[PowerRankings] Failed to edit existing message, posting a new one:', editErr.message);
+        await message.delete().catch(() => null);
+      }
+    }
+
+    if (!edited) {
+      const newMsg = await channel.send({
+        content: contentText,
+        embeds: divisionEmbeds
+      });
+      writeRef({ channelId: channel.id, messageId: newMsg.id });
+      console.log('[PowerRankings] Posted new Power Rankings message using exact formula.');
+    }
+  } catch (err) {
+    console.error('[PowerRankings] Error updating message:', err);
+  }
+}
+
+module.exports = { updatePowerRankingsMessage, randomizeTeamDivisions, DIVISIONS };
