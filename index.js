@@ -1,8 +1,15 @@
 require('dotenv').config();
+const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const { Client, Collection, GatewayIntentBits } = require('discord.js');
 const { errorEmbed } = require('./utils/embeds');
+
+// --- Railway / Cloud HTTP Health Check Server ---
+const PORT = process.env.PORT || 3000;
+http.createServer((req, res) => res.end('ACW Bot Online')).listen(PORT, () => {
+  console.log(`[HTTP] Health check server listening on port ${PORT}`);
+});
 
 // --- Persistent Volume Database Initialization ---
 const dataDir = path.join(__dirname, 'data');
