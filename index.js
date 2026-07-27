@@ -7,7 +7,9 @@ const { errorEmbed } = require('./utils/embeds');
 
 // --- Railway / Cloud HTTP Health Check Server ---
 const PORT = process.env.PORT || 3000;
-http.createServer((req, res) => res.end('ACW Bot Online')).listen(PORT, '0.0.0.0', () => {
+const server = http.createServer((req, res) => res.end('ACW Bot Online'));
+server.on('error', (err) => console.warn('[HTTP Server] Ignored error:', err.message));
+server.listen(PORT, '0.0.0.0', () => {
   console.log(`[HTTP] Health check server listening on 0.0.0.0:${PORT}`);
 });
 
