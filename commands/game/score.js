@@ -35,6 +35,10 @@ module.exports = {
     .addAttachmentOption(option =>
       option.setName('screenshot')
         .setDescription('Screenshot proof (required for FFL)')
+        .setRequired(false))
+    .addStringOption(option =>
+      option.setName('gif')
+        .setDescription('GIF or image URL to attach to score report (optional)')
         .setRequired(false)),
 
   async execute(interaction) {
@@ -46,6 +50,7 @@ module.exports = {
       const theirScore   = interaction.options.getInteger('their_score');
       const ffl          = interaction.options.getBoolean('ffl') || false;
       const screenshot   = interaction.options.getAttachment('screenshot');
+      const gifUrl       = interaction.options.getString('gif');
 
       const config = require('../../config.json');
       const guild = interaction.guild || interaction.client.guilds.cache.get(config.guildId) || interaction.client.guilds.cache.first();
@@ -183,8 +188,9 @@ module.exports = {
           text: `${scoreId} • Today` 
         });
 
-      if (screenshot) {
-        embed.setImage(screenshot.url);
+      const finalImage = screenshot ? screenshot.url : (gifUrl || null);
+      if (finalImage) {
+        embed.setImage(finalImage);
       }
 
       const row = new ActionRowBuilder().addComponents(
