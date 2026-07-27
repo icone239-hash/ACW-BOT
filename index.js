@@ -115,7 +115,7 @@ client.on('interactionCreate', async interaction => {
 
   // --- Button: Revert Signing ---
   if (interaction.isButton() && interaction.customId.startsWith('revert_sign_')) {
-    await interaction.deferReply({ ephemeral: true });
+    if (!interaction.deferred && !interaction.replied) await interaction.deferReply({ ephemeral: true }).catch(() => {});
     try {
       const parts = interaction.customId.split('_');
       // format: revert_sign_{playerId}_{teamId}_{signedById}_{timestamp}
@@ -450,7 +450,7 @@ client.on('interactionCreate', async interaction => {
 
   // --- Button: Claim Ticket ---
   if (interaction.isButton() && interaction.customId === 'ticket_claim') {
-    await interaction.deferReply({ ephemeral: true });
+    if (!interaction.deferred && !interaction.replied) await interaction.deferReply({ ephemeral: true }).catch(() => {});
     try {
       const member = interaction.member;
       const config = require('./config.json');
