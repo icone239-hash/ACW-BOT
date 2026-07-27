@@ -22,12 +22,12 @@ for (const folder of commandFolders) {
 }
 
 function getBotToken() {
-  if (process.env.DISCORD_TOKEN) return process.env.DISCORD_TOKEN.trim();
+  if (process.env.DISCORD_TOKEN) return process.env.DISCORD_TOKEN.trim().replace(/^["']|["']$/g, '');
   for (const key of Object.keys(process.env)) {
     if (key.toLowerCase().includes('token')) {
       const val = process.env[key];
       if (val && val.length > 20 && val !== 'YOUR_DISCORD_BOT_TOKEN_HERE') {
-        return val.trim();
+        return val.trim().replace(/^["']|["']$/g, '');
       }
     }
   }

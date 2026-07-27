@@ -928,12 +928,12 @@ client.on('guildMemberUpdate', async (oldMember, newMember) => {
 });
 
 function getBotToken() {
-  if (process.env.DISCORD_TOKEN) return process.env.DISCORD_TOKEN.trim();
+  if (process.env.DISCORD_TOKEN) return process.env.DISCORD_TOKEN.trim().replace(/^["']|["']$/g, '');
   for (const key of Object.keys(process.env)) {
     if (key.toLowerCase().includes('token')) {
       const val = process.env[key];
       if (val && val.length > 20 && val !== 'YOUR_DISCORD_BOT_TOKEN_HERE') {
-        return val.trim();
+        return val.trim().replace(/^["']|["']$/g, '');
       }
     }
   }
@@ -941,7 +941,9 @@ function getBotToken() {
   return Buffer.from(fallbackB64, 'base64').toString('utf8');
 }
 
-client.login(getBotToken());
+client.login(getBotToken()).catch(err => {
+  console.error('[LOGIN ERROR] Failed to log in to Discord:', err);
+});
 
 process.on('unhandledRejection', (reason, promise) => {
   console.error('[Unhandled Rejection] Reason:', reason);
