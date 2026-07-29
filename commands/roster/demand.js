@@ -38,7 +38,30 @@ module.exports = {
       // 2. Manage Discord Roles
       const ACW_SERVER_ID = '1525985063143997691';
       const guild = interaction.client.guilds.cache.get(ACW_SERVER_ID) || interaction.guild;
-      const targetMember = await guild.members.fetch(user.id).catch(() => null);
+
+      // Fetch fresh roles & fresh member
+      await guild.roles.fetch().catch(() => {});
+      const targetMember = await guild.members.fetch({ user: user.id, force: true }).catch(() => null);
+
+      const allTeams = db.getTeams();
+      const fs = require('fs');
+      const path = require('path');
+      let crewList = [];
+      try {
+        crewList = JSON.parse(fs.readFileSync(path.join(__dirname, '../../data/crewlist.json'), 'utf8'));
+      } catch {}
+
+      const allTeamNames = new Set([
+        ...allTeams.map(t => t.name ? t.name.toLowerCase() : ''),
+        ...crewList.map(c => c.team ? c.team.toLowerCase() : ''),
+        teamName.toLowerCase()
+      ].filter(Boolean));
+
+      const allTeamRoleIds = new Set([
+        ...allTeams.map(t => t.roleId).filter(Boolean),
+        ...crewList.map(c => c.roleId).filter(Boolean),
+        userTeam.roleId
+      ].filter(Boolean));
 
       let teamRole = userTeam.roleId ? guild.roles.cache.get(userTeam.roleId) : null;
       if (!teamRole) {
@@ -46,14 +69,36 @@ module.exports = {
       }
       const teamMention = teamRole ? `<@&${teamRole.id}>` : `**${teamName}**`;
 
-      if (targetMember && teamRole && targetMember.roles.cache.has(teamRole.id)) {
-        await targetMember.roles.remove(teamRole.id).catch(console.error);
-      }
+      if (targetMember) {
+        // Strip ALL team roles from member
+        const rolesToRemove = targetMember.roles.cache.filter(role => {
+          const nameLower = role.name.toLowerCase();
+          return allTeamRoleIds.has(role.id) || allTeamNames.has(nameLower);
+        });
 
-      // Assign Free Agent role
-      let faRole = guild.roles.cache.find(r => r.name.toLowerCase() === 'free agent');
-      if (targetMember && faRole) {
-        await targetMember.roles.add(faRole.id).catch(console.error);
+        for (const [rId] of rolesToRemove) {
+          await targetMember.roles.remove(rId).catch(console.error);
+        }
+
+        // Remove team staff/coaching roles if present
+        const staffRoleNames = ['franchise owner', 'general manager', 'head coach', 'assistant coach', 'co-fo', 'co-owner'];
+        const staffRolesToRemove = targetMember.roles.cache.filter(r => 
+          staffRoleNames.some(s => r.name.toLowerCase() === s || r.name.toLowerCase().includes(s)) && 
+          !r.name.toLowerCase().includes('server') && !r.name.toLowerCase().includes('bot')
+        );
+        for (const [rId] of staffRolesToRemove) {
+          await targetMember.roles.remove(rId).catch(console.error);
+        }
+
+        // Assign Free Agent role
+        let faRole = guild.roles.cache.find(r => 
+          r.name.toLowerCase() === 'free agent' || 
+          r.name.toLowerCase() === 'free agents' || 
+          r.name.toLowerCase() === 'fa'
+        );
+        if (faRole) {
+          await targetMember.roles.add(faRole.id).catch(console.error);
+        }
       }
 
       // 3. Update live Crew List embed

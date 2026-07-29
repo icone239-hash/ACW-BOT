@@ -82,16 +82,37 @@ module.exports = {
 
       // --- 4. Remove Roles & Update Database ---
       if (targetMember) {
-        if (teamRole) {
-          await targetMember.roles.remove(teamRole.id).catch(console.error);
+        await interaction.guild.roles.fetch().catch(() => {});
+        const allTeams = db.getTeams();
+        const allTeamNames = new Set([
+          ...allTeams.map(t => t.name ? t.name.toLowerCase() : ''),
+          ...crewList.map(c => c.team ? c.team.toLowerCase() : ''),
+          userTeam.name.toLowerCase()
+        ].filter(Boolean));
+
+        const allTeamRoleIds = new Set([
+          ...allTeams.map(t => t.roleId).filter(Boolean),
+          ...crewList.map(c => c.roleId).filter(Boolean),
+          userTeam.roleId
+        ].filter(Boolean));
+
+        // Strip ALL team roles from member
+        const rolesToRemove = targetMember.roles.cache.filter(role => {
+          const nameLower = role.name.toLowerCase();
+          return allTeamRoleIds.has(role.id) || allTeamNames.has(nameLower);
+        });
+
+        for (const [rId] of rolesToRemove) {
+          await targetMember.roles.remove(rId).catch(console.error);
         }
 
         // Remove any coaching/franchise staff roles if present
-        const staffRoleNames = ['franchise owner', 'general manager', 'head coach', 'assistant coach', 'fo', 'gm', 'hc', 'ac'];
-        const rolesToRemove = targetMember.roles.cache.filter(r => 
-          staffRoleNames.some(s => r.name.toLowerCase().includes(s)) && !r.name.toLowerCase().includes('server') && !r.name.toLowerCase().includes('bot')
+        const staffRoleNames = ['franchise owner', 'general manager', 'head coach', 'assistant coach', 'fo', 'gm', 'hc', 'ac', 'co-fo', 'co-owner'];
+        const staffRolesToRemove = targetMember.roles.cache.filter(r => 
+          staffRoleNames.some(s => r.name.toLowerCase() === s || r.name.toLowerCase().includes(s)) && 
+          !r.name.toLowerCase().includes('server') && !r.name.toLowerCase().includes('bot')
         );
-        for (const [rId] of rolesToRemove) {
+        for (const [rId] of staffRolesToRemove) {
           await targetMember.roles.remove(rId).catch(console.error);
         }
 
