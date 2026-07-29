@@ -744,7 +744,7 @@
     "pointsFor": 4,
     "pointsAgainst": 0,
     "createdAt": "2026-07-27T23:36:31.824Z",
-    "division": "South Division (American Conference)"
+    "division": "Central Division (American Conference)"
   },
   {
     "id": 79,
@@ -760,7 +760,7 @@
     "pointsFor": 0,
     "pointsAgainst": 0,
     "createdAt": "2026-07-28T08:32:46.006Z",
-    "division": "South Division (American Conference)"
+    "division": "Gulf Division (American Conference)"
   },
   {
     "id": 80,
@@ -789,6 +789,7 @@
     "ties": 0,
     "pointsFor": 0,
     "pointsAgainst": 0,
-    "createdAt": "2026-07-29T03:08:45.907Z"
+    "createdAt": "2026-07-29T03:08:45.907Z",
+    "division": "North Division (American Conference)"
   }
 ]

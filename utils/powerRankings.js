@@ -91,6 +91,71 @@ function sortTeams(a, b) {
   return bDiff - aDiff;
 }
 
+function balanceAllDivisionsEvenly() {
+  const teams = db.getTeams();
+  const crewList = readCrewList();
+  if (crewList.length === 0) return;
+
+  const mapped = crewList.map(c => {
+    let dbTeam = teams.find(t => t.name.toLowerCase() === c.team.toLowerCase() || (c.roleId && t.roleId === c.roleId));
+    if (!dbTeam) {
+      dbTeam = db.createTeam({
+        name: c.team,
+        abbreviation: c.team.substring(0, 4).toUpperCase(),
+        roleId: c.roleId || '',
+        wins: 0, losses: 0, ties: 0, pointsFor: 0, pointsAgainst: 0
+      });
+    }
+    return dbTeam;
+  });
+
+  const divBuckets = {};
+  DIVISIONS.forEach(d => divBuckets[d] = []);
+  const unassigned = [];
+
+  mapped.forEach(t => {
+    if (t.division && DIVISIONS.includes(t.division)) {
+      divBuckets[t.division].push(t);
+    } else {
+      unassigned.push(t);
+    }
+  });
+
+  const total = mapped.length;
+  const maxPerDiv = Math.ceil(total / DIVISIONS.length);
+  const minPerDiv = Math.floor(total / DIVISIONS.length);
+
+  // Trim overflow
+  DIVISIONS.forEach(d => {
+    while (divBuckets[d].length > maxPerDiv) {
+      unassigned.push(divBuckets[d].pop());
+    }
+  });
+
+  // Fill underflow
+  DIVISIONS.forEach(d => {
+    while (divBuckets[d].length < minPerDiv && unassigned.length > 0) {
+      const t = unassigned.shift();
+      divBuckets[d].push(t);
+    }
+  });
+
+  // Distribute remaining
+  while (unassigned.length > 0) {
+    const sortedDivs = DIVISIONS.slice().sort((a, b) => divBuckets[a].length - divBuckets[b].length);
+    const chosen = sortedDivs[0];
+    const t = unassigned.shift();
+    divBuckets[chosen].push(t);
+  }
+
+  // Update DB
+  DIVISIONS.forEach(d => {
+    divBuckets[d].forEach(t => {
+      db.updateTeamDivision(t.id, d);
+    });
+  });
+}
+
 function randomizeTeamDivisions() {
   const crewList = readCrewList();
   if (crewList.length === 0) return;
@@ -144,30 +209,15 @@ async function updatePowerRankingsMessage(guild) {
     };
   });
 
-  // If any crew is missing a division, assign a division to ONLY the unassigned team(s) without touching existing teams
-  const unassigned = allCrews.filter(c => !c.division || !DIVISIONS.includes(c.division));
-  if (unassigned.length > 0) {
-    const currentTeams = db.getTeams();
-    unassigned.forEach(c => {
-      const dbTeam = currentTeams.find(t => t.name.toLowerCase() === c.name.toLowerCase() || (c.roleId && t.roleId === c.roleId));
-      if (dbTeam) {
-        // Balance across divisions
-        const divCounts = {};
-        DIVISIONS.forEach(d => divCounts[d] = 0);
-        currentTeams.forEach(t => {
-          if (t.division && DIVISIONS.includes(t.division)) {
-            divCounts[t.division] = (divCounts[t.division] || 0) + 1;
-          }
-        });
-        const sortedDivs = DIVISIONS.slice().sort((a, b) => divCounts[a] - divCounts[b]);
-        const chosenDiv = sortedDivs[0] || DIVISIONS[Math.floor(Math.random() * DIVISIONS.length)];
-
-        db.updateTeamDivision(dbTeam.id, chosenDiv);
-        c.division = chosenDiv;
-        dbTeam.division = chosenDiv;
-      }
-    });
-  }
+  // Ensure all divisions have an even distribution of teams (10-11 teams each)
+  balanceAllDivisionsEvenly();
+  const refreshedTeams = db.getTeams();
+  allCrews.forEach(c => {
+    const dbTeam = refreshedTeams.find(t => t.name.toLowerCase() === c.name.toLowerCase() || (c.roleId && t.roleId === c.roleId));
+    if (dbTeam && dbTeam.division) {
+      c.division = dbTeam.division;
+    }
+  });
 
   // Find overall Rank 1 team for the ping text (formula score)
   const sortedOverall = [...allCrews].sort(sortTeams);
