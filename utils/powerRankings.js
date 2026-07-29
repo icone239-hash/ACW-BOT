@@ -202,8 +202,14 @@ async function updatePowerRankingsMessage(guild) {
 
       if (i < divTeams.length) {
         const team = divTeams[i];
-        const roleExists = team.roleId && guild.roles.cache.has(team.roleId);
-        const teamMention = roleExists ? `<@&${team.roleId}>` : `**${team.name}**`;
+        let role = null;
+        if (team.roleId && guild.roles.cache.has(team.roleId)) {
+          role = guild.roles.cache.get(team.roleId);
+        } else if (team.name) {
+          const cleanName = team.name.replace(/^<@&|\d+>$/g, '').trim();
+          role = guild.roles.cache.find(r => r.name.toLowerCase() === cleanName.toLowerCase() || r.name.toLowerCase() === team.name.toLowerCase());
+        }
+        const teamMention = role ? `<@&${role.id}>` : `**${team.name}**`;
         const hasGames = (team.wins + team.losses + team.ties) > 0;
         const scoreStr = hasGames ? `**${team.wins}W - ${team.losses}L**` : 'No games';
         
@@ -237,36 +243,40 @@ async function updatePowerRankingsMessage(guild) {
   }
 
   const ref = readRef();
-  let message = null;
 
-  if (ref.channelId === channel.id && ref.messageId) {
-    message = await channel.messages.fetch(ref.messageId).catch(() => null);
-  }
-
-  try {
-    let edited = false;
-    if (message) {
-      try {
-        await message.edit({
+  // Purge any extra duplicate bot messages in power-rankings channel
+  const fetchedMessages = await channel.messages.fetch({ limit: 20 }).catch(() => null);
+  if (fetchedMessages && fetchedMessages.size > 0) {
+    const botMessages = fetchedMessages.filter(m => m.author.id === guild.client.user.id);
+    if (ref.channelId === channel.id && ref.messageId) {
+      const existing = botMessages.get(ref.messageId) || await channel.messages.fetch(ref.messageId).catch(() => null);
+      if (existing) {
+        for (const [id, msg] of botMessages) {
+          if (id !== ref.messageId) {
+            await msg.delete().catch(() => {});
+          }
+        }
+        await existing.edit({
           content: contentText,
           embeds: divisionEmbeds
         });
-        console.log('[PowerRankings] Updated existing Power Rankings message using exact formula.');
-        edited = true;
-      } catch (editErr) {
-        console.warn('[PowerRankings] Failed to edit existing message, posting a new one:', editErr.message);
-        await message.delete().catch(() => null);
+        console.log('[PowerRankings] Updated single master Power Rankings message.');
+        return;
       }
     }
 
-    if (!edited) {
-      const newMsg = await channel.send({
-        content: contentText,
-        embeds: divisionEmbeds
-      });
-      writeRef({ channelId: channel.id, messageId: newMsg.id });
-      console.log('[PowerRankings] Posted new Power Rankings message using exact formula.');
+    for (const [id, msg] of botMessages) {
+      await msg.delete().catch(() => {});
     }
+  }
+
+  try {
+    const newMsg = await channel.send({
+      content: contentText,
+      embeds: divisionEmbeds
+    });
+    writeRef({ channelId: channel.id, messageId: newMsg.id });
+    console.log('[PowerRankings] Posted single new Power Rankings message.');
   } catch (err) {
     console.error('[PowerRankings] Error updating message:', err);
   }
