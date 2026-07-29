@@ -11,28 +11,9 @@
     "roleId": "1528942932839895162",
     "ownerTag": "@des",
     "ownerId": "1437686694563418143",
-    "ownerHandle": "@des"
-  },
-  {
-    "team": "volKno",
-    "roleId": "1527397258285420644",
-    "ownerTag": "@georgerussl",
-    "ownerId": "1212951395368444009",
-    "ownerHandle": "@georgerussl"
-  },
-  {
-    "team": "Reaper",
-    "roleId": "1526240922096894112",
-    "ownerTag": "@.zxny",
-    "ownerId": "1485120077979455528",
-    "ownerHandle": "@.zxny"
-  },
-  {
-    "team": "quray",
-    "roleId": "1526273201628254362",
-    "ownerTag": "@p",
-    "ownerId": "1167647769364791338",
-    "ownerHandle": "@p"
+    "ownerHandle": "@des",
+    "color": "#62ed05",
+    "color2": "#ed6d05"
   },
   {
     "team": "Jams Academy",
@@ -44,9 +25,9 @@
   {
     "team": "Pain",
     "roleId": "1527391409450254356",
-    "ownerTag": "@vanguard",
+    "ownerTag": "<@620061449036759072>",
     "ownerId": "620061449036759072",
-    "ownerHandle": "@vanguard"
+    "ownerHandle": "<@620061449036759072>"
   },
   {
     "team": "Regain",
@@ -70,87 +51,11 @@
     "ownerHandle": "@Eli(rest-lost)"
   },
   {
-    "team": "Egypt",
-    "roleId": "1528822869985853560",
-    "ownerTag": "@tr_apzz1",
-    "ownerId": "1303407914354212875",
-    "ownerHandle": "@tr_apzz1"
-  },
-  {
-    "team": "FollowHer",
-    "roleId": "1528187081233535039",
-    "ownerTag": "@bloodyricks5",
-    "ownerId": "1324870576854142976",
-    "ownerHandle": "@bloodyricks5"
-  },
-  {
-    "team": "Sinned",
-    "roleId": "1528224616202371143",
-    "ownerTag": "@41",
-    "ownerId": "1508371436731895811",
-    "ownerHandle": "@41"
-  },
-  {
-    "team": "Spain",
-    "roleId": "1528187807326142515",
-    "ownerTag": "<@1524864720228581489>",
-    "ownerId": "1524864720228581489"
-  },
-  {
-    "team": "Affinity",
-    "roleId": "1528193984961183846",
-    "ownerTag": "@Lostfate✰",
-    "ownerId": "1391850264662900746",
-    "ownerHandle": "@Lostfate✰"
-  },
-  {
-    "team": "Passion",
-    "roleId": "1528441477766713366",
-    "ownerTag": "@Urlyingmom",
-    "ownerId": "1524609626958467257",
-    "ownerHandle": "@Urlyingmom"
-  },
-  {
-    "team": "Haunt",
-    "roleId": "1528619486767218740",
-    "ownerTag": "@$",
-    "ownerId": "1239695086778843196",
-    "ownerHandle": "@$"
-  },
-  {
-    "team": "Shine",
-    "roleId": "1528841508621389975",
-    "ownerTag": "@Eliminate",
-    "ownerId": "1483275547290243185",
-    "ownerHandle": "@Eliminate"
-  },
-  {
     "team": "Overkill",
     "roleId": "1528803278819692803",
-    "ownerTag": "@.xrezaaaaa",
+    "ownerTag": "<@1428478798541885491>",
     "ownerId": "1428478798541885491",
-    "ownerHandle": "@.xrezaaaaa"
-  },
-  {
-    "team": "Desire",
-    "roleId": "1528812887295135884",
-    "ownerTag": "@Xvtol",
-    "ownerId": "1521943368127742131",
-    "ownerHandle": "@Xvtol"
-  },
-  {
-    "team": "Ascendant III",
-    "roleId": "1528841424702017646",
-    "ownerTag": "@cruz",
-    "ownerId": "1266804386328215764",
-    "ownerHandle": "@cruz"
-  },
-  {
-    "team": "Striker",
-    "roleId": "1528861580333416659",
-    "ownerTag": "@.beltedbyisolated",
-    "ownerId": "1421922777845207201",
-    "ownerHandle": "@.beltedbyisolated"
+    "ownerHandle": "<@1428478798541885491>"
   },
   {
     "team": "Repent",
@@ -160,17 +65,252 @@
     "ownerHandle": "@cleact."
   },
   {
-    "team": "Tokyo",
-    "roleId": "1528979550598336574",
-    "ownerTag": "@.ch5k",
-    "ownerId": "1361172942334984242",
-    "ownerHandle": "@.ch5k"
+    "team": "T3K",
+    "roleId": "1529195491475062866",
+    "ownerTag": "<@1524441794589491453>",
+    "ownerId": "1524441794589491453",
+    "ownerHandle": "<@1524441794589491453>"
   },
   {
-    "team": "MILESTONE",
+    "team": "Greece",
+    "roleId": "1529222316368859246",
+    "ownerTag": "<@1518931861009596426>",
+    "ownerId": "1518931861009596426",
+    "ownerHandle": "<@1518931861009596426>",
+    "color": "#ffffff",
+    "color2": "#FFFFFF",
+    "iconUrl": ""
+  },
+  {
+    "team": "the sahurs",
+    "roleId": "1529256798677106899",
+    "ownerTag": "<@1513900123007226010>",
+    "ownerId": "1513900123007226010",
+    "ownerHandle": "<@1513900123007226010>",
+    "color": "#914b00",
+    "color2": "#FFFFFF",
+    "iconUrl": ""
+  },
+  {
+    "team": "Hated",
+    "roleId": "1529259939053174987",
+    "ownerTag": "<@1465466510188216424>",
+    "ownerId": "1465466510188216424",
+    "ownerHandle": "<@1465466510188216424>",
+    "color": "#00FF7F",
+    "color2": "#FFFFFF",
+    "iconUrl": ""
+  },
+  {
+    "team": "$G",
+    "roleId": "1529347788398133471",
+    "ownerTag": "<@1465147214455115904>",
+    "ownerId": "1465147214455115904",
+    "ownerHandle": "<@1465147214455115904>",
+    "color": "#00FF7F",
+    "color2": "#FFFFFF",
+    "iconUrl": ""
+  },
+  {
+    "team": "Ham And Cheese",
+    "roleId": "1529350706807570453",
+    "ownerTag": "<@1486913012085428244>",
+    "ownerId": "1486913012085428244",
+    "ownerHandle": "<@1486913012085428244>",
+    "color": "#00FF7F",
+    "color2": "#FFFFFF",
+    "iconUrl": ""
+  },
+  {
+    "team": "prayer",
+    "roleId": "1529367999419650088",
+    "ownerTag": "<@1047245760900628540>",
+    "ownerId": "1047245760900628540",
+    "ownerHandle": "<@1047245760900628540>"
+  },
+  {
+    "team": "heal or suffer",
+    "roleId": "1529378985576759466",
+    "ownerTag": "<@1351705091194884136>",
+    "ownerId": "1351705091194884136",
+    "ownerHandle": "<@1351705091194884136>"
+  },
+  {
+    "team": "HYBRIDS",
+    "roleId": "1529525055284052120",
+    "ownerTag": "<@1262457195023569011>",
+    "ownerId": "1262457195023569011",
+    "ownerHandle": "<@1262457195023569011>",
+    "color": "#00FF7F",
+    "color2": "#FFFFFF",
+    "iconUrl": ""
+  },
+  {
+    "team": "slant academy",
     "roleId": "1529013201318969375",
     "ownerTag": "<@1486042686061543608>",
-    "ownerId": "1486042686061543608",
-    "iconUrl": ""
+    "ownerId": "1486042686061543608"
+  },
+  {
+    "team": "Rome",
+    "roleId": "1529541463598436476",
+    "ownerTag": "<@1481090361039524035>",
+    "ownerId": "1481090361039524035",
+    "iconUrl": "",
+    "color": "#ffd700",
+    "color2": "#FFFFFF"
+  },
+  {
+    "team": "Rival",
+    "roleId": "1529732081440129066",
+    "ownerTag": "<@1167647769364791338>",
+    "ownerId": "1167647769364791338"
+  },
+  {
+    "team": "snow",
+    "roleId": "1529991383295856751",
+    "ownerTag": "<@1391330727643320370>",
+    "ownerId": "1391330727643320370",
+    "iconUrl": "",
+    "color": "#0000FF",
+    "color2": "#FFFFFF"
+  },
+  {
+    "team": "Arcane",
+    "roleId": "1529975940745003138",
+    "ownerTag": "<@1378986194205151242>",
+    "ownerId": "1378986194205151242"
+  },
+  {
+    "team": "PowerRangers",
+    "roleId": "1530080223964565544",
+    "ownerTag": "<@1528862577243721789>",
+    "ownerId": "1528862577243721789"
+  },
+  {
+    "team": "distriical",
+    "roleId": "1530204600743755876",
+    "ownerTag": "<@1429620877716357250>",
+    "ownerId": "1429620877716357250"
+  },
+  {
+    "team": "overly",
+    "roleId": "1529990890884563126",
+    "ownerTag": "<@1476415131666743376>",
+    "ownerId": "1476415131666743376"
+  },
+  {
+    "team": "Jane",
+    "roleId": "1530299371357470750",
+    "ownerTag": "<@1061451748587360276>",
+    "ownerId": "1061451748587360276"
+  },
+  {
+    "team": "Assassins",
+    "roleId": "1530327057417113681",
+    "ownerTag": "<@1518647544404775062>",
+    "ownerId": "1518647544404775062",
+    "iconUrl": "",
+    "color": "#00FF7F",
+    "color2": "#FFFFFF"
+  },
+  {
+    "team": "~Evil-",
+    "roleId": "1530722775528898691",
+    "ownerTag": "<@928041702005043270>",
+    "ownerId": "928041702005043270"
+  },
+  {
+    "team": "kool ducks,",
+    "roleId": "1530748513846169741",
+    "ownerTag": "<@1327910794935013418>",
+    "ownerId": "1327910794935013418"
+  },
+  {
+    "team": "DRAKCO",
+    "roleId": "1530750071199498250",
+    "ownerTag": "<@758036979102384250>",
+    "ownerId": "758036979102384250"
+  },
+  {
+    "team": "Haiyu",
+    "roleId": "1530752135384268860",
+    "ownerTag": "<@1516598199802920960>",
+    "ownerId": "1516598199802920960"
+  },
+  {
+    "team": "blossom",
+    "roleId": "1530781579029385436",
+    "ownerTag": "<@1388799922404462746>",
+    "ownerId": "1388799922404462746"
+  },
+  {
+    "team": "evoke",
+    "roleId": "1530811914286928013",
+    "ownerTag": "<@562038694303760412>",
+    "ownerId": "562038694303760412"
+  },
+  {
+    "team": "Øway",
+    "roleId": "1530964582728859758",
+    "ownerTag": "<@1496521805626736672>",
+    "ownerId": "1496521805626736672",
+    "iconUrl": "",
+    "color": "#00FF7F",
+    "color2": "#FFFFFF"
+  },
+  {
+    "team": "Rev",
+    "roleId": "1530999803360710806",
+    "ownerTag": "<@1529910688284278846>",
+    "ownerId": "1529910688284278846"
+  },
+  {
+    "team": "Milestone",
+    "roleId": "1531043332216848486",
+    "ownerTag": "<@1492688428737892412>",
+    "ownerId": "1492688428737892412"
+  },
+  {
+    "team": "Egypt",
+    "roleId": "1531424535499374785",
+    "ownerTag": "<@1303407914354212875>",
+    "ownerId": "1303407914354212875"
+  },
+  {
+    "team": "glory",
+    "roleId": "1531434228691238942",
+    "ownerTag": "<@1513539701972275303>",
+    "ownerId": "1513539701972275303"
+  },
+  {
+    "team": "<@&1531444573107388469>",
+    "roleId": "1531445225174863943",
+    "ownerTag": "<@858896824441765969>",
+    "ownerId": "858896824441765969",
+    "iconUrl": "",
+    "color": "#FFC0CB",
+    "color2": "#0000FF"
+  },
+  {
+    "team": "perish",
+    "roleId": "1531577394945724528",
+    "ownerTag": "<@1027778500536569856>",
+    "ownerId": "1027778500536569856"
+  },
+  {
+    "team": "despair",
+    "roleId": "1531651623837896834",
+    "ownerTag": "<@1206358876715352075>",
+    "ownerId": "1206358876715352075"
+  },
+  {
+    "team": "apex",
+    "roleId": "1531764895111184485",
+    "ownerTag": "<@1485120077979455528>",
+    "ownerId": "1485120077979455528",
+    "iconUrl": "",
+    "color": "#FF0000",
+    "color2": "#000001"
   }
 ]
