@@ -42,10 +42,12 @@ function buildCrewListEmbed(guild, activeMembers = new Set()) {
 
   // Single vertical list in description: @TeamRole — Owner
   const lines = crewList.map(entry => {
-    let teamDisplay = `**${entry.team}**`;
-    if (entry.roleId && guild.roles.cache.has(entry.roleId)) {
-      teamDisplay = `<@&${entry.roleId}>`;
+    let roleId = entry.roleId;
+    if (!roleId && entry.team) {
+      const found = guild.roles.cache.find(r => r.name.toLowerCase() === entry.team.toLowerCase());
+      if (found) roleId = found.id;
     }
+    const teamDisplay = roleId ? `<@&${roleId}>` : `@${entry.team}`;
 
     let ownerDisplay = 'Unknown';
     if (entry.ownerId && activeMembers.has(entry.ownerId)) {
@@ -79,7 +81,17 @@ async function updateCrewListMessage(guild) {
 
     // Fetch roles & all owner member profiles into cache individually to check guild status
     await guild.roles.fetch().catch(() => {});
+
+    // Auto-sync missing roleIds in crewlist.json
+    let changed = false;
     for (const entry of crewList) {
+      if (!entry.roleId && entry.team) {
+        const found = guild.roles.cache.find(r => r.name.toLowerCase() === entry.team.toLowerCase());
+        if (found) {
+          entry.roleId = found.id;
+          changed = true;
+        }
+      }
       if (entry.ownerId) {
         try {
           await guild.members.fetch(entry.ownerId);
@@ -88,6 +100,9 @@ async function updateCrewListMessage(guild) {
           // Member not in guild
         }
       }
+    }
+    if (changed) {
+      fs.writeFileSync(CREWLIST_PATH, JSON.stringify(crewList, null, 2), 'utf8');
     }
 
     // Find the crew-list channel by name
