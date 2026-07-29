@@ -42,12 +42,13 @@ function buildCrewListEmbed(guild, activeMembers = new Set()) {
 
   // Single vertical list in description: @TeamRole — Owner
   const lines = crewList.map(entry => {
-    let roleId = entry.roleId;
-    if (!roleId && entry.team) {
-      const found = guild.roles.cache.find(r => r.name.toLowerCase() === entry.team.toLowerCase());
-      if (found) roleId = found.id;
+    let role = null;
+    if (entry.roleId && guild.roles.cache.has(entry.roleId)) {
+      role = guild.roles.cache.get(entry.roleId);
+    } else if (entry.team) {
+      role = guild.roles.cache.find(r => r.name.toLowerCase() === entry.team.toLowerCase());
     }
-    const teamDisplay = roleId ? `<@&${roleId}>` : `@${entry.team}`;
+    const teamDisplay = role ? `<@&${role.id}>` : `**${entry.team}**`;
 
     let ownerDisplay = 'Unknown';
     if (entry.ownerId && activeMembers.has(entry.ownerId)) {
