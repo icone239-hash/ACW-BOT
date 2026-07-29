@@ -122,28 +122,43 @@ async function updateCrewListMessage(guild) {
     const embed = buildCrewListEmbed(guild, activeMembers);
     const ref = readMsgRef();
 
-    // Try to edit the existing message
-    if (ref.channelId === channel.id && ref.messageId) {
-      try {
-        const existing = await channel.messages.fetch(ref.messageId);
-        await existing.edit({ embeds: [embed] });
-        console.log('[CREWLIST] Updated existing crew list message with clickable mentions.');
-        return;
-      } catch (editErr) {
-        console.warn('[CREWLIST] Failed to edit existing message, sending a new one:', editErr.message);
-        try {
-          const existing = await channel.messages.fetch(ref.messageId).catch(() => null);
-          if (existing) {
-            await existing.delete().catch(() => null);
+    // Fetch recent messages in channel to clean up duplicates
+    const fetchedMessages = await channel.messages.fetch({ limit: 20 }).catch(() => null);
+    if (fetchedMessages && fetchedMessages.size > 0) {
+      const botMessages = fetchedMessages.filter(m => m.author.id === guild.client.user.id);
+      
+      // If we have a valid ref, ensure ONLY ref.messageId remains, delete any other bot messages
+      if (ref.channelId === channel.id && ref.messageId) {
+        let refFound = false;
+        for (const [id, msg] of botMessages) {
+          if (id === ref.messageId) {
+            refFound = true;
+          } else {
+            await msg.delete().catch(() => {});
           }
-        } catch {}
+        }
+        if (refFound) {
+          try {
+            const existing = await channel.messages.fetch(ref.messageId);
+            await existing.edit({ embeds: [embed] });
+            console.log('[CREWLIST] Updated single crew list message & purged duplicates.');
+            return;
+          } catch (editErr) {
+            console.warn('[CREWLIST] Failed to edit existing message:', editErr.message);
+          }
+        }
+      }
+
+      // Purge all old bot messages before sending a new single message
+      for (const [id, msg] of botMessages) {
+        await msg.delete().catch(() => {});
       }
     }
 
-    // Send a new message and save the reference
+    // Send a new single message and save the reference
     const msg = await channel.send({ embeds: [embed] });
     writeMsgRef({ channelId: channel.id, messageId: msg.id });
-    console.log(`[CREWLIST] Sent new crew list message (${msg.id})`);
+    console.log(`[CREWLIST] Sent new single crew list message (${msg.id})`);
 
   } catch (err) {
     console.error('[CREWLIST] Failed to update crew list message:', err.message);
