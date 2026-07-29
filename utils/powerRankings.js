@@ -55,19 +55,18 @@ const DIVISIONS = DIVISIONS_CONFIG.map(d => d.name);
 
 /**
  * User Formula:
- * Score = (Win Percentage × 100) + (Games Played × 2)
+ * Power Score = (Wins × 10) + (Win Percentage × 100) − (Losses × 2)
  * Win Percentage = Wins ÷ (Wins + Losses)
- * Games Played = Wins + Losses
  * Unplayed teams rank below all played teams.
  */
 function getPowerRankScore(team) {
   const wins = team.wins || 0;
   const losses = team.losses || 0;
   const gamesPlayed = wins + losses;
-  if (gamesPlayed === 0) return -1;
+  if (gamesPlayed === 0) return -999;
 
-  const winPercentage = wins / gamesPlayed;
-  return (winPercentage * 100) + (gamesPlayed * 2);
+  const winPercentage = (wins / gamesPlayed) * 100;
+  return (wins * 10) + winPercentage - (losses * 2);
 }
 
 function sortTeams(a, b) {
@@ -286,7 +285,7 @@ async function updatePowerRankingsMessage(guild) {
       .setColor(divConf.color)
       .setTitle(`${divConf.emoji} ${divConf.name}`)
       .setDescription(descLines.join('\n'))
-      .setFooter({ text: `${guild.name} • Formula: (Win% × 100) + (GP × 2) • Top 3 Qualify 🎟️`, iconURL: guild.iconURL({ dynamic: true }) })
+      .setFooter({ text: `${guild.name} • Formula: (Wins × 10) + Win% − (Losses × 2) • Top 3 Qualify 🎟️`, iconURL: guild.iconURL({ dynamic: true }) })
       .setTimestamp();
 
     divisionEmbeds.push(divEmbed);
