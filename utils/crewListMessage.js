@@ -42,12 +42,14 @@ function buildCrewListEmbed(guild, activeMembers = new Set()) {
 
   // Single vertical list in description: @TeamRole — Owner
   const lines = crewList.map(entry => {
-    let roleId = entry.roleId;
-    if (!roleId && entry.team) {
-      const found = guild.roles.cache.find(r => r.name.toLowerCase() === entry.team.toLowerCase());
-      if (found) roleId = found.id;
+    let role = null;
+    if (entry.roleId && guild.roles.cache.has(entry.roleId)) {
+      role = guild.roles.cache.get(entry.roleId);
+    } else if (entry.team) {
+      role = guild.roles.cache.find(r => r.name.toLowerCase() === entry.team.toLowerCase());
     }
-    const teamDisplay = roleId ? `<@&${roleId}>` : `@${entry.team}`;
+
+    const teamDisplay = role ? `<@&${role.id}>` : `**${entry.team}**`;
 
     let ownerDisplay = 'Unknown';
     if (entry.ownerId && activeMembers.has(entry.ownerId)) {
@@ -122,28 +124,37 @@ async function updateCrewListMessage(guild) {
     const embed = buildCrewListEmbed(guild, activeMembers);
     const ref = readMsgRef();
 
-    // Try to edit the existing message
-    if (ref.channelId === channel.id && ref.messageId) {
-      try {
-        const existing = await channel.messages.fetch(ref.messageId);
-        await existing.edit({ embeds: [embed] });
-        console.log('[CREWLIST] Updated existing crew list message with clickable mentions.');
-        return;
-      } catch (editErr) {
-        console.warn('[CREWLIST] Failed to edit existing message, sending a new one:', editErr.message);
-        try {
-          const existing = await channel.messages.fetch(ref.messageId).catch(() => null);
-          if (existing) {
-            await existing.delete().catch(() => null);
+    // Fetch recent messages in channel to clean up ANY extra/duplicate bot messages
+    const fetchedMessages = await channel.messages.fetch({ limit: 20 }).catch(() => null);
+    if (fetchedMessages && fetchedMessages.size > 0) {
+      const botMessages = fetchedMessages.filter(m => m.author.id === guild.client.user.id);
+      
+      // If we have a saved ref, check if it exists on Discord
+      if (ref.channelId === channel.id && ref.messageId) {
+        const existing = botMessages.get(ref.messageId) || await channel.messages.fetch(ref.messageId).catch(() => null);
+        if (existing) {
+          // Delete all OTHER bot messages in channel
+          for (const [id, msg] of botMessages) {
+            if (id !== ref.messageId) {
+              await msg.delete().catch(() => {});
+            }
           }
-        } catch {}
+          await existing.edit({ embeds: [embed] });
+          console.log('[CREWLIST] Updated single master crew list message & deleted extra bot messages.');
+          return;
+        }
+      }
+
+      // Purge all old bot messages before sending a new single message
+      for (const [id, msg] of botMessages) {
+        await msg.delete().catch(() => {});
       }
     }
 
-    // Send a new message and save the reference
+    // Send a new single message and save the reference
     const msg = await channel.send({ embeds: [embed] });
     writeMsgRef({ channelId: channel.id, messageId: msg.id });
-    console.log(`[CREWLIST] Sent new crew list message (${msg.id})`);
+    console.log(`[CREWLIST] Sent new single master crew list message (${msg.id})`);
 
   } catch (err) {
     console.error('[CREWLIST] Failed to update crew list message:', err.message);
