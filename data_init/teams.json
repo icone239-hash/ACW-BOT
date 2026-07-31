@@ -39,19 +39,6 @@
     "division": "North Division (American Conference)"
   },
   {
-    "id": 11,
-    "name": "Pain",
-    "abbreviation": "PAIN",
-    "logo": "",
-    "roleId": "1527391409450254356",
-    "wins": 0,
-    "losses": 3,
-    "ties": 0,
-    "pointsFor": 0,
-    "pointsAgainst": 12,
-    "division": "Central Division (American Conference)"
-  },
-  {
     "id": 14,
     "name": "Aspen",
     "abbreviation": "",
@@ -107,20 +94,6 @@
     "pointsAgainst": 0,
     "createdAt": "2026-07-21T07:50:56.380Z",
     "division": "Gulf Division (American Conference)"
-  },
-  {
-    "id": 25,
-    "name": "Overkill",
-    "abbreviation": "OVER",
-    "logo": "",
-    "roleId": "1528803278819692803",
-    "wins": 0,
-    "losses": 0,
-    "ties": 0,
-    "pointsFor": 0,
-    "pointsAgainst": 0,
-    "createdAt": "2026-07-21T07:50:56.380Z",
-    "division": "North Division (American Conference)"
   },
   {
     "id": 27,
@@ -331,20 +304,6 @@
     "pointsAgainst": 12,
     "createdAt": "2026-07-22T16:18:27.865Z",
     "division": "North Division (American Conference)"
-  },
-  {
-    "id": 46,
-    "name": "heal or suffer",
-    "abbreviation": "HEAL",
-    "logo": "",
-    "roleId": "1529378985576759466",
-    "wins": 0,
-    "losses": 1,
-    "ties": 0,
-    "pointsFor": 1,
-    "pointsAgainst": 4,
-    "createdAt": "2026-07-22T16:18:27.866Z",
-    "division": "Central Division (American Conference)"
   },
   {
     "id": 49,
@@ -623,22 +582,6 @@
     "division": "South Division (American Conference)"
   },
   {
-    "id": 71,
-    "name": "Øway",
-    "abbreviation": "",
-    "logo": "",
-    "roleId": "1530964582728859758",
-    "color": "#00FF7F",
-    "color2": "#FFFFFF",
-    "wins": 1,
-    "losses": 2,
-    "ties": 0,
-    "pointsFor": 4,
-    "pointsAgainst": 9,
-    "createdAt": "2026-07-26T15:46:41.645Z",
-    "division": "North Division (American Conference)"
-  },
-  {
     "id": 72,
     "name": "Rev",
     "abbreviation": "REV",
@@ -761,35 +704,5 @@
     "pointsAgainst": 0,
     "createdAt": "2026-07-28T08:32:46.006Z",
     "division": "Gulf Division (American Conference)"
-  },
-  {
-    "id": 80,
-    "name": "apex",
-    "abbreviation": "",
-    "logo": "",
-    "roleId": "1531764895111184485",
-    "color": "#FF0000",
-    "color2": "#000001",
-    "wins": 0,
-    "losses": 0,
-    "ties": 0,
-    "pointsFor": 0,
-    "pointsAgainst": 0,
-    "createdAt": "2026-07-28T20:46:45.311Z",
-    "division": "Central Division (American Conference)"
-  },
-  {
-    "id": 81,
-    "name": "despair",
-    "abbreviation": "DESP",
-    "logo": "",
-    "roleId": "1531651623837896834",
-    "wins": 0,
-    "losses": 0,
-    "ties": 0,
-    "pointsFor": 0,
-    "pointsAgainst": 0,
-    "createdAt": "2026-07-29T03:08:45.907Z",
-    "division": "North Division (American Conference)"
   }
 ]
