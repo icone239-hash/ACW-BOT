@@ -28,6 +28,14 @@ module.exports = {
     try {
       const playerUser = interaction.options.getUser('player');
       const member = interaction.member;
+
+      const { areTransactionsOpen } = require('../../utils/transactionsHelper');
+      if (!areTransactionsOpen() && !isAdmin(member) && !isSuperAdmin(member)) {
+        return await interaction.editReply({
+          embeds: [errorEmbed('Transactions Closed', '🔒 Roster transactions are currently **CLOSED** (Playoffs). Crew owners and players cannot release players at this time.')]
+        });
+      }
+
       const crewList = readCrewList();
 
       // --- 1. Find executor's team ---

@@ -21,6 +21,15 @@ module.exports = {
       const member = interaction.member;
       const reason = interaction.options.getString('reason') || 'No reason provided';
 
+      const { areTransactionsOpen } = require('../../utils/transactionsHelper');
+      const { isAdmin, isSuperAdmin } = require('../../utils/permissions');
+
+      if (!areTransactionsOpen() && !isAdmin(member) && !isSuperAdmin(member)) {
+        return await interaction.editReply({
+          embeds: [errorEmbed('Transactions Closed', '🔒 Roster transactions are currently **CLOSED** (Playoffs). Crew owners and players cannot demand release at this time.')]
+        });
+      }
+
       // Find user's current team
       let userTeam = getUserTeam(member);
 

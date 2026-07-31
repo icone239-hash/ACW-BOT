@@ -28,6 +28,13 @@ module.exports = {
       const position = interaction.options.getString('position') || 'N/A';
       const member = interaction.member;
 
+      const { areTransactionsOpen } = require('../../utils/transactionsHelper');
+      if (!areTransactionsOpen() && !isAdmin(member) && !isSuperAdmin(member)) {
+        return await interaction.editReply({
+          embeds: [errorEmbed('Transactions Closed', '🔒 Roster transactions are currently **CLOSED** (Playoffs). Crew owners and players cannot sign players at this time.')]
+        });
+      }
+
       // --- Find the user's team ---
       const userTeam = getUserTeam(member);
 

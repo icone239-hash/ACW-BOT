@@ -27,6 +27,17 @@ module.exports = {
     await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
     const userId = interaction.user.id;
+    const member = interaction.member;
+
+    const { areTransactionsOpen } = require('../../utils/transactionsHelper');
+    const { isAdmin, isSuperAdmin } = require('../../utils/permissions');
+
+    if (!areTransactionsOpen() && !isAdmin(member) && !isSuperAdmin(member)) {
+      return await interaction.editReply({
+        embeds: [errorEmbed('Transactions Closed', '🔒 Roster transactions are currently **CLOSED** (Playoffs). Crew owners cannot disband teams at this time.')]
+      });
+    }
+
     const crewList = readCrewList();
 
     // Find the crew owned by this user
