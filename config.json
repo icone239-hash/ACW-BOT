@@ -15,6 +15,7 @@
     "ac": null,
     "captain": null,
     "captainLimit": 3,
+    "rosterCap": 10,
     "custom": []
   },
   "recordPermissions": {

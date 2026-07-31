@@ -108,11 +108,25 @@ module.exports = {
         }
       }
 
-      // --- Snapshot roster count BEFORE adding the new player ---
-      const rosterBefore = teamRole ? teamRole.members.size : db.getTeamPlayers(userTeam.id).length;
-      if (rosterBefore >= MAX_ROSTER) {
+      // --- Fetch guild members & calculate complete roster count BEFORE adding the new player ---
+      await Promise.race([
+        interaction.guild.members.fetch(),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('Fetch timeout')), 2500))
+      ]).catch(() => {});
+
+      const dbPlayers = db.getTeamPlayers(userTeam.id);
+      const teamMembers = teamRole ? teamRole.members : new Map();
+      const crewEntry = crewList.find(e => e.team.toLowerCase() === userTeam.name.toLowerCase() || (userTeam.roleId && e.roleId === userTeam.roleId));
+
+      const allPlayerIds = new Set(Array.from(teamMembers.keys()));
+      for (const p of dbPlayers) {
+        if (p.discordId) allPlayerIds.add(p.discordId);
+      }
+      if (crewEntry?.ownerId) allPlayerIds.add(crewEntry.ownerId);
+
+      if (allPlayerIds.size >= MAX_ROSTER) {
         return await interaction.editReply({
-          embeds: [errorEmbed('Roster Full', `Your roster is full (${rosterBefore}/${MAX_ROSTER}). Release a player first.`)]
+          embeds: [errorEmbed('Roster Full', `🔒 Your roster is currently full (**${allPlayerIds.size}/${MAX_ROSTER}**). Team owners cannot sign more than 10 players. Release a player first.`)]
         });
       }
 

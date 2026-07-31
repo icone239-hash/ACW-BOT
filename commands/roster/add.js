@@ -43,6 +43,33 @@ module.exports = {
         });
       }
 
+      // --- Enforce 10 Player Max Roster Cap ---
+      await Promise.race([
+        interaction.guild.members.fetch(),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('Fetch timeout')), 2500))
+      ]).catch(() => {});
+
+      const dbPlayers = db.getTeamPlayers(team.id);
+      let teamRole = team.roleId ? interaction.guild.roles.cache.get(team.roleId) : interaction.guild.roles.cache.find(r => r.name.toLowerCase() === team.name.toLowerCase());
+      const teamMembers = teamRole ? teamRole.members : new Map();
+      const fs = require('fs');
+      const path = require('path');
+      const crewList = JSON.parse(fs.readFileSync(path.join(__dirname, '../../data/crewlist.json'), 'utf8'));
+      const crewEntry = crewList.find(e => e.team.toLowerCase() === team.name.toLowerCase() || (team.roleId && e.roleId === team.roleId));
+
+      const allPlayerIds = new Set(Array.from(teamMembers.keys()));
+      for (const p of dbPlayers) {
+        if (p.discordId) allPlayerIds.add(p.discordId);
+      }
+      if (crewEntry?.ownerId) allPlayerIds.add(crewEntry.ownerId);
+
+      if (allPlayerIds.size >= 10) {
+        return interaction.reply({
+          embeds: [errorEmbed('Roster Full', `🔒 **${team.name}** roster is full (**${allPlayerIds.size}/10**). Teams cannot have more than 10 players. Release a player first.`)],
+          flags: MessageFlags.Ephemeral
+        });
+      }
+
       db.addPlayer({
         discordId: playerUser.id,
         username: playerUser.username,
