@@ -116,13 +116,13 @@ module.exports = {
 
       const dbPlayers = db.getTeamPlayers(userTeam.id);
       const teamMembers = teamRole ? teamRole.members : new Map();
-      const crewEntry = crewList.find(e => e.team.toLowerCase() === userTeam.name.toLowerCase() || (userTeam.roleId && e.roleId === userTeam.roleId));
+      const foundCrew = crewEntry || crewList.find(e => e.team.toLowerCase() === userTeam.name.toLowerCase() || (userTeam.roleId && e.roleId === userTeam.roleId));
 
       const allPlayerIds = new Set(Array.from(teamMembers.keys()));
       for (const p of dbPlayers) {
         if (p.discordId) allPlayerIds.add(p.discordId);
       }
-      if (crewEntry?.ownerId) allPlayerIds.add(crewEntry.ownerId);
+      if (foundCrew?.ownerId) allPlayerIds.add(foundCrew.ownerId);
 
       if (allPlayerIds.size >= MAX_ROSTER) {
         return await interaction.editReply({
