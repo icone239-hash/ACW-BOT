@@ -1,39 +1,18 @@
 {
-  "token": "YOUR_DISCORD_BOT_TOKEN_HERE",
-  "clientId": "1529252378073764043",
-  "guildId": "1525985063143997691",
-  "leagueName": "ACW Park Wars League",
-  "leagueColor": "#ED4245",
-  "rosterCap": 30,
-  "maxCrews": 43,
-  "leagueLogo": "",
-  "adminRoles": [
-    "1528971156881674350",
-    "1528971765957529621",
-    "1526008884463013908",
-    "1526008710491668522"
+  "adminRoles": [],
+  "superAdminRoles": [],
+  "modStrikeRoles": [],
+  "promoteRoles": [
+    "1532854315071570000"
   ],
-  "superAdminRoles": [
-    "1525988162390720522",
-    "1525985365658177597",
-    "1525987781825007667",
-    "1528977868124852224",
-    "1526008884463013908"
-  ],
-  "strikeRoles": [],
-  "assistantCoachRole": "",
-  "headCoachRole": "",
-  "logChannelId": "",
-  "scoresChannelId": "",
-  "standingsChannelId": "",
-  "modStrikeRoles": [
-    "1526008433134932112"
+  "demoteRoles": [
+    "1532854315071570000"
   ],
   "franchiseRoles": {
-    "fo": "1525999578057539614",
-    "gm": "1525999899319996556",
+    "fo": null,
+    "gm": null,
     "hc": null,
-    "ac": "1525999899319996556",
+    "ac": null,
     "captain": null,
     "captainLimit": 3,
     "custom": []
@@ -42,27 +21,5 @@
     "roles": [],
     "logChannelId": null
   },
-  "channels": {
-    "transactions": "1525998986215821382",
-    "crewlist": "1526005442298380472",
-    "powerRankings": "1526005236374966302",
-    "topList": "1526005799933968444",
-    "suspensions": "1526012668752953414",
-    "suspensionRules": "1526016130592800788",
-    "modStrikes": "1528977491589468220",
-    "crewStrikes": "",
-    "modList": "1529272077050187888"
-  },
-  "promoteRoles": [
-    "1525999578057539614",
-    "1525988162390720522",
-    "1528986033071460513"
-  ],
-  "demoteRoles": [
-    "1525988162390720522",
-    "1525985365658177597",
-    "1525987781825007667",
-    "1525999578057539614",
-    "1525999899319996556"
-  ]
+  "channels": {}
 }

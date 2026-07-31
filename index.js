@@ -72,12 +72,17 @@ for (const folder of commandFolders) {
 }
 
 const { updateCrewListMessage } = require('./utils/crewListMessage');
+const { checkExpiredSuspensions } = require('./utils/suspensionChecker');
 
 client.once('clientReady', async () => {
   console.log(`✅ Football League Bot online! Logged in as ${client.user.tag}`);
   // Post/update the crew list message in the #crew-list channel on startup
   const guild = client.guilds.cache.get(config.guildId) || client.guilds.cache.first();
   if (guild) await updateCrewListMessage(guild).catch(console.error);
+
+  // Check expired suspensions on startup & set interval every 5 minutes
+  await checkExpiredSuspensions(client).catch(console.error);
+  setInterval(() => checkExpiredSuspensions(client).catch(console.error), 5 * 60 * 1000);
 });
 
 
