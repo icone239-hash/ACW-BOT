@@ -30,9 +30,9 @@ module.exports = {
       const member = interaction.member;
 
       const { areTransactionsOpen } = require('../../utils/transactionsHelper');
-      if (!areTransactionsOpen() && !isAdmin(member) && !isSuperAdmin(member)) {
+      if (!areTransactionsOpen()) {
         return await interaction.editReply({
-          embeds: [errorEmbed('Transactions Closed', '🔒 Roster transactions are currently **CLOSED** (Playoffs). Crew owners and players cannot release players at this time.')]
+          embeds: [errorEmbed('Transactions Closed', '🔒 Roster transactions are currently **CLOSED** (Playoffs). Releasing players is disabled.')]
         });
       }
 

@@ -30,11 +30,9 @@ module.exports = {
     const member = interaction.member;
 
     const { areTransactionsOpen } = require('../../utils/transactionsHelper');
-    const { isAdmin, isSuperAdmin } = require('../../utils/permissions');
-
-    if (!areTransactionsOpen() && !isAdmin(member) && !isSuperAdmin(member)) {
+    if (!areTransactionsOpen()) {
       return await interaction.editReply({
-        embeds: [errorEmbed('Transactions Closed', '🔒 Roster transactions are currently **CLOSED** (Playoffs). Crew owners cannot disband teams at this time.')]
+        embeds: [errorEmbed('Transactions Closed', '🔒 Roster transactions are currently **CLOSED** (Playoffs). Disbanding teams is disabled.')]
       });
     }
 

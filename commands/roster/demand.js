@@ -22,11 +22,9 @@ module.exports = {
       const reason = interaction.options.getString('reason') || 'No reason provided';
 
       const { areTransactionsOpen } = require('../../utils/transactionsHelper');
-      const { isAdmin, isSuperAdmin } = require('../../utils/permissions');
-
-      if (!areTransactionsOpen() && !isAdmin(member) && !isSuperAdmin(member)) {
+      if (!areTransactionsOpen()) {
         return await interaction.editReply({
-          embeds: [errorEmbed('Transactions Closed', '🔒 Roster transactions are currently **CLOSED** (Playoffs). Crew owners and players cannot demand release at this time.')]
+          embeds: [errorEmbed('Transactions Closed', '🔒 Roster transactions are currently **CLOSED** (Playoffs). Demanding release is disabled.')]
         });
       }
 
