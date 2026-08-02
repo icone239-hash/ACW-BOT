@@ -15,7 +15,10 @@ function isSystemOrUtilityRole(nameLower) {
     'admin', 'mod', 'owner', 'staff', 'booster', 'bot', 'free agent', 'fa',
     'suspended', 'suspension', 'strike', 'ticket', 'community', 'verified',
     'unverified', 'members', 'level', 'award', 'pro', 'mvp', 'rpoy', 'opoy',
-    'wroy', 'all-pro', 'champs', 'stage', 'preseason', 'regular season', 'league'
+    'wroy', 'all-pro', 'champs', 'stage', 'preseason', 'regular season', 'league',
+    'security team', 'livestreams', 'wr', 'events', 'qb', 'very good sex',
+    'general manager', 'commissioner', 'community manager', 'resurrection',
+    'resurection', 'bp', 'jp', 'rdoty', 'dpoy', 'hcoty'
   ];
   return systemKeywords.some(k => nameLower.includes(k)) || nameLower.startsWith('═') || nameLower.startsWith('—');
 }
