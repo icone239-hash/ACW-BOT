@@ -88,8 +88,8 @@ module.exports = {
         const iconUrl   = interaction.options.getString('icon_url') || '';
 
         const crewList = readCrewList();
-        const configData = JSON.parse(fs.readFileSync(path.join(__dirname, '../../config.json'), 'utf8'));
-        const maxCrews = configData.maxCrews || 34;
+        const { getMaxCrews } = require('../../utils/crewLimitHelper');
+        const maxCrews = getMaxCrews();
 
         if (crewList.length >= maxCrews) {
           return await interaction.editReply({

@@ -22,5 +22,6 @@
     "roles": [],
     "logChannelId": null
   },
-  "channels": {}
+  "channels": {},
+  "maxCrews": 40
 }

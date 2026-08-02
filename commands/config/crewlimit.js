@@ -32,15 +32,14 @@ module.exports = {
     const newLimit = interaction.options.getInteger('limit');
 
     try {
-      const config = JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf8'));
-      config.maxCrews = newLimit;
-      fs.writeFileSync(CONFIG_PATH, JSON.stringify(config, null, 2), 'utf8');
+      const { setMaxCrews } = require('../../utils/crewLimitHelper');
+      setMaxCrews(newLimit);
 
       // Refresh the live crew list message in Discord
       await updateCrewListMessage(interaction.guild);
 
       await interaction.editReply({
-        embeds: [successEmbed('Crew Limit Updated', `The crew list limit has been set to **${newLimit}** crews.`)]
+        embeds: [successEmbed('Crew Limit Updated', `The crew list limit has been permanently set to **${newLimit}** crews.`)]
       });
 
     } catch (err) {

@@ -25,8 +25,8 @@ function writeMsgRef(data) {
 function buildCrewListEmbed(guild, activeMembers = new Set()) {
   const crewList = readCrewList();
 
-  const config = JSON.parse(fs.readFileSync(path.join(__dirname, '../config.json'), 'utf8'));
-  const maxCrews = config.maxCrews || 34;
+  const { getMaxCrews } = require('./crewLimitHelper');
+  const maxCrews = getMaxCrews();
 
   const embed = new EmbedBuilder()
     .setColor('#ED4245')
