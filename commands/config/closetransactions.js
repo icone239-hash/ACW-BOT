@@ -24,6 +24,11 @@ module.exports = {
       setTransactionsOpen(false);
 
       const guild = interaction.guild;
+      if (guild) {
+        const { updatePowerRankingsMessage } = require('../../utils/powerRankings');
+        await updatePowerRankingsMessage(guild).catch(console.error);
+      }
+
       const transactionsChannel = guild ? (
         guild.channels.cache.get('1525998986215821382') ||
         guild.channels.cache.find(c => c.isTextBased() && (c.name.includes('transaction') || c.name.includes('transactions')))
@@ -32,11 +37,11 @@ module.exports = {
       const announceEmbed = new EmbedBuilder()
         .setColor('#ED4245')
         .setAuthor({ 
-          name: 'ACW S1 | Playoffs & Transactions', 
+          name: 'ACW S1 | Playoffs', 
           iconURL: guild ? guild.iconURL({ dynamic: true }) : null 
         })
-        .setTitle('🔒 Roster Transactions Closed')
-        .setDescription('@everyone **Roster transactions are now CLOSED for Playoffs!**\n\nCrew owners and players cannot `/sign`, `/demand`, `/release`, `/transfer`, or trade players at this time.')
+        .setTitle('🔒 Transactions, Scores & Power Rankings Closed')
+        .setDescription('@everyone **Roster transactions, score submissions, and Power Rankings are now CLOSED for Playoffs!**\n\n- Roster modifications (`/sign`, `/demand`, `/release`, `/transfer`) are disabled.\n- Score submissions (`/score`) are closed.\n- Power Rankings & standings are frozen for the Playoffs.')
         .setTimestamp();
 
       if (transactionsChannel) {
@@ -47,7 +52,7 @@ module.exports = {
       }
 
       await interaction.editReply({
-        embeds: [successEmbed('Transactions Closed', '🔒 Roster transactions have been **CLOSED**. Crew owners and players can no longer sign, demand, release, or trade players.')]
+        embeds: [successEmbed('Playoffs Lockdown Activated', '🔒 Roster transactions, score submissions, and Power Rankings have been **CLOSED** and frozen for the Playoffs.')]
       });
 
     } catch (err) {

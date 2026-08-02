@@ -24,6 +24,11 @@ module.exports = {
       setTransactionsOpen(true);
 
       const guild = interaction.guild;
+      if (guild) {
+        const { updatePowerRankingsMessage } = require('../../utils/powerRankings');
+        await updatePowerRankingsMessage(guild).catch(console.error);
+      }
+
       const transactionsChannel = guild ? (
         guild.channels.cache.get('1525998986215821382') ||
         guild.channels.cache.find(c => c.isTextBased() && (c.name.includes('transaction') || c.name.includes('transactions')))
@@ -32,11 +37,11 @@ module.exports = {
       const announceEmbed = new EmbedBuilder()
         .setColor('#57F287')
         .setAuthor({ 
-          name: 'ACW S1 | Roster Transactions', 
+          name: 'ACW S1 | League Operations', 
           iconURL: guild ? guild.iconURL({ dynamic: true }) : null 
         })
-        .setTitle('🔓 Roster Transactions Open')
-        .setDescription('@everyone **Roster transactions are now OPEN!**\n\nCrew owners and players can now `/sign`, `/demand`, `/release`, `/transfer`, and trade players.')
+        .setTitle('🔓 Transactions, Scores & Power Rankings Open')
+        .setDescription('@everyone **Roster transactions, score submissions, and Power Rankings are now OPEN!**\n\n- Roster modifications (`/sign`, `/demand`, `/release`, `/transfer`) are enabled.\n- Score submissions (`/score`) are open.\n- Power Rankings & standings are active.')
         .setTimestamp();
 
       if (transactionsChannel) {
@@ -47,7 +52,7 @@ module.exports = {
       }
 
       await interaction.editReply({
-        embeds: [successEmbed('Transactions Opened', '🔓 Roster transactions have been **OPENED**. Crew owners and players can now sign, demand, release, and trade.')]
+        embeds: [successEmbed('League Operations Opened', '🔓 Roster transactions, score submissions, and Power Rankings have been **OPENED**.')]
       });
 
     } catch (err) {

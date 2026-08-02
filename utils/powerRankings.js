@@ -228,7 +228,13 @@ async function updatePowerRankingsMessage(guild) {
   const preseasonRole = guild.roles.cache.find(r => r.name.includes('Preseason Champs'));
   const champsMention = preseasonRole ? `<@&${preseasonRole.id}>` : '**Preseason Champs**';
 
-  const contentText = `@everyone 🏆 **OFFICIAL ACW S1 DIVISION POWER RANKINGS**\n🎟️ *The Top 3 crews from each division make the Playoffs!*\n\n${rank1Mention} is currently holding overall #1 looking to claim the ${champsMention} title! Can anyone overcome them?`;
+  // Check if transactions/regular season are closed for Playoffs
+  const { areTransactionsOpen } = require('./transactionsHelper');
+  const isClosed = !areTransactionsOpen();
+
+  const contentText = isClosed
+    ? `@everyone 🔒 **OFFICIAL ACW S1 DIVISION POWER RANKINGS — FROZEN FOR PLAYOFFS**\n🏆 *The Regular Season has ended. Power Rankings and standings are frozen for the Playoffs!*`
+    : `@everyone 🏆 **OFFICIAL ACW S1 DIVISION POWER RANKINGS**\n🎟️ *The Top 3 crews from each division make the Playoffs!*\n\n${rank1Mention} is currently holding overall #1 looking to claim the ${champsMention} title! Can anyone overcome them?`;
 
   const divisionEmbeds = [];
 

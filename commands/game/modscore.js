@@ -61,6 +61,13 @@ module.exports = {
         });
       }
 
+      const { areTransactionsOpen } = require('../../utils/transactionsHelper');
+      if (!areTransactionsOpen() && !isSuperAdmin(member)) {
+        return await interaction.editReply({
+          embeds: [errorEmbed('Scores Closed', '🔒 Score reporting and regular season games are currently **CLOSED** for Playoffs.')]
+        });
+      }
+
       const team1Role = interaction.options.getRole('team1');
       const score1    = interaction.options.getInteger('score1');
       const team2Role = interaction.options.getRole('team2');

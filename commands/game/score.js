@@ -52,6 +52,13 @@ module.exports = {
       const screenshot   = interaction.options.getAttachment('screenshot');
       const gifUrl       = interaction.options.getString('gif');
 
+      const { areTransactionsOpen } = require('../../utils/transactionsHelper');
+      if (!areTransactionsOpen()) {
+        return await interaction.editReply({
+          embeds: [errorEmbed('Scores Closed', '🔒 Score reporting and regular season games are currently **CLOSED** for Playoffs. No new regular season scores can be submitted.')]
+        });
+      }
+
       const config = require('../../config.json');
       const guild = interaction.guild || interaction.client.guilds.cache.get(config.guildId) || interaction.client.guilds.cache.first();
       const member = guild ? await guild.members.fetch(interaction.user.id).catch(() => interaction.member) : interaction.member;

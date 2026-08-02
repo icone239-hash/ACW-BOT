@@ -619,7 +619,7 @@
     "pointsFor": 0,
     "pointsAgainst": 0,
     "createdAt": "2026-08-02T06:52:27.659Z",
-    "division": "Central Division (American Conference)"
+    "division": "North Division (American Conference)"
   },
   {
     "id": 105,
@@ -664,6 +664,20 @@
     "pointsFor": 0,
     "pointsAgainst": 0,
     "createdAt": "2026-08-02T06:52:27.660Z",
-    "division": "Gulf Division (American Conference)"
+    "division": "South Division (American Conference)"
+  },
+  {
+    "id": 110,
+    "name": "Rival",
+    "abbreviation": "RIVA",
+    "logo": "",
+    "roleId": "1532233087554158672",
+    "color": "#0028ff",
+    "wins": 0,
+    "losses": 0,
+    "ties": 0,
+    "pointsFor": 0,
+    "pointsAgainst": 0,
+    "createdAt": "2026-08-02T06:54:30.719Z"
   }
 ]
