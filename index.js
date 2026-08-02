@@ -74,19 +74,31 @@ for (const folder of commandFolders) {
 const { updateCrewListMessage } = require('./utils/crewListMessage');
 const { checkExpiredSuspensions } = require('./utils/suspensionChecker');
 const { auditAndPurgeDeletedTeamRoles, purgeTeamByRoleOrName } = require('./utils/teamAutoPurger');
+const { syncDiscordRolesToCrewList } = require('./utils/autoRoleSync');
 
 client.once('clientReady', async () => {
   console.log(`✅ Football League Bot online! Logged in as ${client.user.tag}`);
-  // Audit deleted team roles & post/update crew list message on startup
+  // Audit deleted team roles, sync new Discord team roles & post/update crew list message on startup
   const guild = client.guilds.cache.get(config.guildId) || client.guilds.cache.first();
   if (guild) {
     await auditAndPurgeDeletedTeamRoles(guild).catch(console.error);
+    await syncDiscordRolesToCrewList(guild).catch(console.error);
     await updateCrewListMessage(guild).catch(console.error);
   }
 
   // Check expired suspensions on startup & set interval every 5 minutes
   await checkExpiredSuspensions(client).catch(console.error);
   setInterval(() => checkExpiredSuspensions(client).catch(console.error), 5 * 60 * 1000);
+});
+
+// --- Auto-detect new team roles added manually in Discord settings ---
+client.on('roleCreate', async role => {
+  try {
+    if (!role || !role.guild) return;
+    await syncDiscordRolesToCrewList(role.guild);
+  } catch (err) {
+    console.error('[roleCreate Sync Handler Error]', err);
+  }
 });
 
 // --- Auto-purge team when its Discord Role is deleted ---
