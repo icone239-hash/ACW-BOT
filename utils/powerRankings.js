@@ -200,16 +200,21 @@ async function updatePowerRankingsMessage(guild) {
       .setDescription('**The Regular Season has concluded!**\n\nPower Rankings and Standings are currently **hidden** for the duration of the Playoffs. They will return once the Playoffs are complete.')
       .setTimestamp();
 
-    const ref = readRef();
-    if (ref.channelId && ref.messageId) {
-      const msg = await channel.messages.fetch(ref.messageId).catch(() => null);
-      if (msg) {
-        await msg.edit({
-          content: '🔒 **POWER RANKINGS HIDDEN FOR PLAYOFFS**',
-          embeds: [closedEmbed]
-        }).catch(console.error);
-        return;
+    const fetched = await channel.messages.fetch({ limit: 50 }).catch(() => null);
+    if (fetched && fetched.size > 0) {
+      const sortedMsgs = Array.from(fetched.values()).sort((a, b) => a.createdTimestamp - b.createdTimestamp);
+      const keeper = sortedMsgs[0];
+      await keeper.edit({
+        content: '🔒 **POWER RANKINGS HIDDEN FOR PLAYOFFS**',
+        embeds: [closedEmbed]
+      }).catch(console.error);
+
+      // Purge any extra duplicate messages in the channel
+      for (let i = 1; i < sortedMsgs.length; i++) {
+        await sortedMsgs[i].delete().catch(() => {});
       }
+      writeRef({ channelId: channel.id, messageId: keeper.id });
+      return;
     }
 
     const newMsg = await channel.send({
