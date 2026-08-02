@@ -509,10 +509,33 @@ client.on('interactionCreate', async interaction => {
       // Read claims stats to find the opener
       const { readStats, writeStats } = require('./utils/ticketStats');
       const stats = readStats();
-      const claimEntry = stats.claims[interaction.channel.id];
+      let claimEntry = stats.claims[interaction.channel.id];
 
       if (!claimEntry) {
-        return await interaction.editReply({ content: '❌ Ticket claim info not found in database.' });
+        // Fallback: detect opener from channel topic, overwrites, or claimer
+        let openerId = null;
+
+        if (interaction.channel.topic) {
+          const match = interaction.channel.topic.match(/\d{17,20}/);
+          if (match) openerId = match[0];
+        }
+
+        if (!openerId) {
+          const userOverwrite = interaction.channel.permissionOverwrites.cache.find(o => 
+            o.type === 1 && o.id !== interaction.user.id && o.id !== client.user.id
+          );
+          if (userOverwrite) openerId = userOverwrite.id;
+        }
+
+        if (!openerId) openerId = interaction.user.id;
+
+        claimEntry = {
+          openerId: openerId,
+          claimerId: interaction.user.id,
+          claimedAt: new Date().toISOString()
+        };
+        stats.claims[interaction.channel.id] = claimEntry;
+        writeStats(stats);
       }
 
       const openerId = claimEntry.openerId;
