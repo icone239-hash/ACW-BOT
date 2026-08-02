@@ -40,8 +40,8 @@ module.exports = {
           name: 'ACW S1 | Playoffs', 
           iconURL: guild ? guild.iconURL({ dynamic: true }) : null 
         })
-        .setTitle('🔒 Transactions, Scores & Power Rankings Closed')
-        .setDescription('@everyone **Roster transactions, score submissions, and Power Rankings are now CLOSED for Playoffs!**\n\n- Roster modifications (`/sign`, `/demand`, `/release`, `/transfer`) are disabled.\n- Score submissions (`/score`) are closed.\n- Power Rankings & standings are frozen for the Playoffs.')
+        .setTitle('🔒 Roster Transactions & Scores Closed')
+        .setDescription('@everyone **Roster transactions and score submissions are now CLOSED for Playoffs!**')
         .setTimestamp();
 
       if (transactionsChannel) {
