@@ -13,19 +13,6 @@
     "division": "Gulf Division (American Conference)"
   },
   {
-    "id": 5,
-    "name": "Jams Academy",
-    "abbreviation": "JAMS",
-    "logo": "",
-    "roleId": "1526310732818550894",
-    "wins": 0,
-    "losses": 0,
-    "ties": 0,
-    "pointsFor": 0,
-    "pointsAgainst": 0,
-    "division": "Central Division (American Conference)"
-  },
-  {
     "id": 8,
     "name": "Regain",
     "abbreviation": "REGA",
@@ -95,48 +82,6 @@
     "division": "Central Division (American Conference)"
   },
   {
-    "id": 21,
-    "name": "FollowHer",
-    "abbreviation": "FOLL",
-    "logo": "",
-    "roleId": "1528187081233535039",
-    "wins": 0,
-    "losses": 0,
-    "ties": 0,
-    "pointsFor": 0,
-    "pointsAgainst": 0,
-    "createdAt": "2026-07-21T07:50:56.380Z",
-    "division": "Gulf Division (American Conference)"
-  },
-  {
-    "id": 25,
-    "name": "Overkill",
-    "abbreviation": "OVER",
-    "logo": "",
-    "roleId": "1532851904881623040",
-    "wins": 0,
-    "losses": 0,
-    "ties": 0,
-    "pointsFor": 0,
-    "pointsAgainst": 0,
-    "createdAt": "2026-07-21T07:50:56.380Z",
-    "division": "North Division (American Conference)"
-  },
-  {
-    "id": 27,
-    "name": "Striker",
-    "abbreviation": "STRI",
-    "logo": "",
-    "roleId": "1528861580333416659",
-    "wins": 0,
-    "losses": 0,
-    "ties": 0,
-    "pointsFor": 0,
-    "pointsAgainst": 0,
-    "createdAt": "2026-07-21T07:50:56.380Z",
-    "division": "Gulf Division (American Conference)"
-  },
-  {
     "id": 28,
     "name": "Repent",
     "abbreviation": "REPE",
@@ -149,34 +94,6 @@
     "pointsAgainst": 15,
     "createdAt": "2026-07-21T07:50:56.380Z",
     "division": "North Division (American Conference)"
-  },
-  {
-    "id": 29,
-    "name": "Nova",
-    "abbreviation": "TOKY",
-    "logo": "",
-    "roleId": "1528979550598336574",
-    "wins": 1,
-    "losses": 1,
-    "ties": 0,
-    "pointsFor": 4,
-    "pointsAgainst": 6,
-    "createdAt": "2026-07-21T07:50:56.380Z",
-    "division": "Central Division (American Conference)"
-  },
-  {
-    "id": 31,
-    "name": "ZENSHI",
-    "abbreviation": "ZENS",
-    "logo": "",
-    "roleId": "1529193055771562134",
-    "wins": 0,
-    "losses": 0,
-    "ties": 0,
-    "pointsFor": 0,
-    "pointsAgainst": 0,
-    "createdAt": "2026-07-21T18:30:07.586Z",
-    "division": "Central Division (American Conference)"
   },
   {
     "id": 33,
@@ -193,20 +110,6 @@
     "division": "Gulf Division (American Conference)"
   },
   {
-    "id": 34,
-    "name": "Capital",
-    "abbreviation": "CAPI",
-    "logo": "",
-    "roleId": "1529196672620433578",
-    "wins": 0,
-    "losses": 0,
-    "ties": 0,
-    "pointsFor": 0,
-    "pointsAgainst": 0,
-    "createdAt": "2026-07-21T18:44:11.793Z",
-    "division": "North Division (American Conference)"
-  },
-  {
     "id": 35,
     "name": "Greece",
     "abbreviation": "",
@@ -220,22 +123,6 @@
     "pointsFor": 34,
     "pointsAgainst": 43,
     "createdAt": "2026-07-21T20:23:31.740Z",
-    "division": "North Division (American Conference)"
-  },
-  {
-    "id": 36,
-    "name": "Peace",
-    "abbreviation": "",
-    "logo": "",
-    "roleId": "1529223371160555532",
-    "color": "#0d3ede",
-    "color2": "#ffffff",
-    "wins": 0,
-    "losses": 4,
-    "ties": 0,
-    "pointsFor": 3,
-    "pointsAgainst": 14,
-    "createdAt": "2026-07-21T20:27:43.422Z",
     "division": "North Division (American Conference)"
   },
   {
@@ -303,22 +190,6 @@
     "division": "Gulf Division (American Conference)"
   },
   {
-    "id": 42,
-    "name": "Reap",
-    "abbreviation": "",
-    "logo": "",
-    "roleId": "1529454452195590206",
-    "color": "#00FF00",
-    "color2": "#FFFFFF",
-    "wins": 0,
-    "losses": 0,
-    "ties": 0,
-    "pointsFor": 0,
-    "pointsAgainst": 0,
-    "createdAt": "2026-07-22T11:45:57.620Z",
-    "division": "Gulf Division (American Conference)"
-  },
-  {
     "id": 45,
     "name": "prayer",
     "abbreviation": "PRAY",
@@ -363,20 +234,6 @@
     "division": "South Division (American Conference)"
   },
   {
-    "id": 50,
-    "name": "reality",
-    "abbreviation": "REAL",
-    "logo": "",
-    "roleId": "1529522662467174532",
-    "wins": 0,
-    "losses": 0,
-    "ties": 0,
-    "pointsFor": 0,
-    "pointsAgainst": 0,
-    "createdAt": "2026-07-22T16:30:25.772Z",
-    "division": "North Division (American Conference)"
-  },
-  {
     "id": 51,
     "name": "slant academy",
     "abbreviation": "SLAN",
@@ -389,20 +246,6 @@
     "pointsAgainst": 4,
     "createdAt": "2026-07-22T16:53:22.217Z",
     "division": "Gulf Division (American Conference)"
-  },
-  {
-    "id": 52,
-    "name": "brazil",
-    "abbreviation": "BRAZ",
-    "logo": "",
-    "roleId": "1529530127854075944",
-    "wins": 0,
-    "losses": 0,
-    "ties": 0,
-    "pointsFor": 0,
-    "pointsAgainst": 0,
-    "createdAt": "2026-07-22T16:56:58.851Z",
-    "division": "Central Division (American Conference)"
   },
   {
     "id": 53,
@@ -541,22 +384,6 @@
     "pointsAgainst": 16,
     "createdAt": "2026-07-24T21:33:22.527Z",
     "division": "Central Division (American Conference)"
-  },
-  {
-    "id": 64,
-    "name": "cinnamon bun",
-    "abbreviation": "CINN",
-    "logo": "",
-    "roleId": "1530414794119581777",
-    "color": "",
-    "color2": "",
-    "wins": 0,
-    "losses": 0,
-    "ties": 0,
-    "pointsFor": 0,
-    "pointsAgainst": 0,
-    "createdAt": "2026-07-25T04:13:47.669Z",
-    "division": "Gulf Division (American Conference)"
   },
   {
     "id": 65,
@@ -728,7 +555,7 @@
     "pointsFor": 0,
     "pointsAgainst": 4,
     "createdAt": "2026-07-27T23:33:53.683Z",
-    "division": "South Division (American Conference)"
+    "division": "North Division (American Conference)"
   },
   {
     "id": 78,
@@ -763,33 +590,16 @@
     "division": "Gulf Division (American Conference)"
   },
   {
-    "id": 80,
-    "name": "apex",
-    "abbreviation": "",
-    "logo": "",
-    "roleId": "1532851914914664610",
-    "color": "#FF0000",
-    "color2": "#000001",
-    "wins": 0,
-    "losses": 0,
-    "ties": 0,
-    "pointsFor": 0,
-    "pointsAgainst": 0,
-    "createdAt": "2026-07-28T20:46:45.311Z",
-    "division": "Central Division (American Conference)"
-  },
-  {
     "id": 81,
-    "name": "despair",
-    "abbreviation": "DESP",
+    "name": "! FORSAKEN !",
+    "abbreviation": "! FO",
     "logo": "",
-    "roleId": "1532851914176467064",
+    "roleId": "1533178268922937644",
     "wins": 0,
     "losses": 0,
     "ties": 0,
     "pointsFor": 0,
     "pointsAgainst": 0,
-    "createdAt": "2026-07-29T03:08:45.907Z",
-    "division": "North Division (American Conference)"
+    "createdAt": "2026-08-02T06:48:08.334Z"
   }
 ]

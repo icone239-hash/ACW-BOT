@@ -16,13 +16,6 @@
     "color2": "#ed6d05"
   },
   {
-    "team": "Jams Academy",
-    "roleId": "1526310732818550894",
-    "ownerTag": "@jamfits",
-    "ownerId": "1236103575650697216",
-    "ownerHandle": "@jamfits"
-  },
-  {
     "team": "Pain",
     "roleId": "1532851901731700939",
     "ownerTag": "<@620061449036759072>",
@@ -49,13 +42,6 @@
     "ownerTag": "@Eli(rest-lost)",
     "ownerId": "1431402707628855447",
     "ownerHandle": "@Eli(rest-lost)"
-  },
-  {
-    "team": "Overkill",
-    "roleId": "1532851904881623040",
-    "ownerTag": "<@1428478798541885491>",
-    "ownerId": "1428478798541885491",
-    "ownerHandle": "<@1428478798541885491>"
   },
   {
     "team": "Repent",
@@ -299,18 +285,9 @@
     "ownerId": "1027778500536569856"
   },
   {
-    "team": "despair",
-    "roleId": "1532851914176467064",
-    "ownerTag": "<@1206358876715352075>",
-    "ownerId": "1206358876715352075"
-  },
-  {
-    "team": "apex",
-    "roleId": "1532851914914664610",
-    "ownerTag": "<@1485120077979455528>",
-    "ownerId": "1485120077979455528",
-    "iconUrl": "",
-    "color": "#FF0000",
-    "color2": "#000001"
+    "team": "! FORSAKEN !",
+    "roleId": "1533178268922937644",
+    "ownerTag": "<@1529272977382707231>",
+    "ownerId": "1529272977382707231"
   }
 ]

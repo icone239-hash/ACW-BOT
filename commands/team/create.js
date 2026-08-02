@@ -97,11 +97,11 @@ module.exports = {
           });
         }
 
-        // If team already in DB
-        const existing = db.getTeam(teamName);
-        if (existing) {
+        // Only block if team is currently active in crewlist.json
+        const isCrewActive = crewList.some(e => e.team.toLowerCase().trim() === teamName.toLowerCase().trim());
+        if (isCrewActive) {
           return await interaction.editReply({
-            embeds: [errorEmbed(`A team named **${teamName}** already exists in the database.`)]
+            embeds: [errorEmbed('Team Already Exists', `A team named **${teamName}** is already an active crew in the league.`)]
           });
         }
 

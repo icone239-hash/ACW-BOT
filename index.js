@@ -73,16 +73,34 @@ for (const folder of commandFolders) {
 
 const { updateCrewListMessage } = require('./utils/crewListMessage');
 const { checkExpiredSuspensions } = require('./utils/suspensionChecker');
+const { auditAndPurgeDeletedTeamRoles, purgeTeamByRoleOrName } = require('./utils/teamAutoPurger');
 
 client.once('clientReady', async () => {
   console.log(`✅ Football League Bot online! Logged in as ${client.user.tag}`);
-  // Post/update the crew list message in the #crew-list channel on startup
+  // Audit deleted team roles & post/update crew list message on startup
   const guild = client.guilds.cache.get(config.guildId) || client.guilds.cache.first();
-  if (guild) await updateCrewListMessage(guild).catch(console.error);
+  if (guild) {
+    await auditAndPurgeDeletedTeamRoles(guild).catch(console.error);
+    await updateCrewListMessage(guild).catch(console.error);
+  }
 
   // Check expired suspensions on startup & set interval every 5 minutes
   await checkExpiredSuspensions(client).catch(console.error);
   setInterval(() => checkExpiredSuspensions(client).catch(console.error), 5 * 60 * 1000);
+});
+
+// --- Auto-purge team when its Discord Role is deleted ---
+client.on('roleDelete', async role => {
+  try {
+    if (!role || !role.guild) return;
+    await purgeTeamByRoleOrName(role.guild, {
+      roleId: role.id,
+      teamName: role.name,
+      reason: 'Discord role deleted'
+    });
+  } catch (err) {
+    console.error('[roleDelete Handler Error]', err);
+  }
 });
 
 
