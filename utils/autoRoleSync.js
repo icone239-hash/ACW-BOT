@@ -45,18 +45,23 @@ async function syncDiscordRolesToCrewList(guild) {
       if (isSystemOrUtilityRole(nameLower)) return;
 
       if (!registeredRoleIds.has(role.id) && !registeredNames.has(nameLower)) {
-        // Detect owner member (member holding Owner/Franchise Owner role or first member with this role)
-        let ownerMember = null;
-        role.members.forEach(m => {
-          const hasOwnerRole = m.roles.cache.some(r => r.name.toLowerCase().includes('owner'));
-          if (hasOwnerRole && !ownerMember) ownerMember = m;
-        });
-        if (!ownerMember && role.members.size > 0) {
-          ownerMember = role.members.first();
+        function isOwnerRoleName(name) {
+          const n = name.toLowerCase().trim();
+          return n === 'crew owner' || n === 'owner' || n.includes('franchise owner') || n === 'fo' || n === 'co-fo' || n.includes('pcw owner');
         }
 
-        const ownerId = ownerMember ? ownerMember.user.id : '';
-        const ownerTag = ownerMember ? `<@${ownerMember.user.id}>` : 'Unknown';
+        // Detect owner member (member holding Crew Owner / Owner role)
+        let ownerMember = null;
+        role.members.forEach(m => {
+          const hasOwnerRole = m.roles.cache.some(r => isOwnerRoleName(r.name));
+          if (hasOwnerRole && !ownerMember) ownerMember = m;
+        });
+
+        // REQUIRE a member with a Crew Owner role to be present
+        if (!ownerMember) return;
+
+        const ownerId = ownerMember.user.id;
+        const ownerTag = `<@${ownerMember.user.id}>`;
 
         // 1. Add to crewlist.json
         crewList.push({
