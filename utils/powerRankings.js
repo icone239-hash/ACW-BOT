@@ -189,6 +189,37 @@ async function updatePowerRankingsMessage(guild) {
     return;
   }
 
+  // If transactions/regular season are closed for Playoffs, hide Power Rankings
+  const { areTransactionsOpen } = require('./transactionsHelper');
+  if (!areTransactionsOpen()) {
+    console.log('[PowerRankings] Transactions are CLOSED for Playoffs. Power Rankings are hidden.');
+    const closedEmbed = new EmbedBuilder()
+      .setColor('#ED4245')
+      .setAuthor({ name: 'ACW S1 | Playoffs', iconURL: guild.iconURL({ dynamic: true }) })
+      .setTitle('🔒 Power Rankings Hidden for Playoffs')
+      .setDescription('**The Regular Season has concluded!**\n\nPower Rankings and Standings are currently **hidden** for the duration of the Playoffs. They will return once the Playoffs are complete.')
+      .setTimestamp();
+
+    const ref = readRef();
+    if (ref.channelId && ref.messageId) {
+      const msg = await channel.messages.fetch(ref.messageId).catch(() => null);
+      if (msg) {
+        await msg.edit({
+          content: '🔒 **POWER RANKINGS HIDDEN FOR PLAYOFFS**',
+          embeds: [closedEmbed]
+        }).catch(console.error);
+        return;
+      }
+    }
+
+    const newMsg = await channel.send({
+      content: '🔒 **POWER RANKINGS HIDDEN FOR PLAYOFFS**',
+      embeds: [closedEmbed]
+    }).catch(console.error);
+    if (newMsg) writeRef({ channelId: channel.id, messageId: newMsg.id });
+    return;
+  }
+
   await guild.roles.fetch().catch(() => {});
   const crewList = readCrewList();
   const teams = db.getTeams();
@@ -228,13 +259,7 @@ async function updatePowerRankingsMessage(guild) {
   const preseasonRole = guild.roles.cache.find(r => r.name.includes('Preseason Champs'));
   const champsMention = preseasonRole ? `<@&${preseasonRole.id}>` : '**Preseason Champs**';
 
-  // Check if transactions/regular season are closed for Playoffs
-  const { areTransactionsOpen } = require('./transactionsHelper');
-  const isClosed = !areTransactionsOpen();
-
-  const contentText = isClosed
-    ? `@everyone 🔒 **OFFICIAL ACW S1 DIVISION POWER RANKINGS — FROZEN FOR PLAYOFFS**\n🏆 *The Regular Season has ended. Power Rankings and standings are frozen for the Playoffs!*`
-    : `@everyone 🏆 **OFFICIAL ACW S1 DIVISION POWER RANKINGS**\n🎟️ *The Top 3 crews from each division make the Playoffs!*\n\n${rank1Mention} is currently holding overall #1 looking to claim the ${champsMention} title! Can anyone overcome them?`;
+  const contentText = `@everyone 🏆 **OFFICIAL ACW S1 DIVISION POWER RANKINGS**\n🎟️ *The Top 3 crews from each division make the Playoffs!*\n\n${rank1Mention} is currently holding overall #1 looking to claim the ${champsMention} title! Can anyone overcome them?`;
 
   const divisionEmbeds = [];
 
